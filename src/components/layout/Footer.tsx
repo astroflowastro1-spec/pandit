@@ -11,11 +11,6 @@ const footerLinks = {
     { name: "Devotional Music", href: "#" },
   ],
   quickLinks: [
-    { name: "About Us", href: "#" },
-    { name: "Our Temples", href: "#" },
-    { name: "Blog & Articles", href: "#" },
-    { name: "Contact Us", href: "#" },
-    { name: "FAQs", href: "#" },
     { name: "Terms & Conditions", href: "/terms" },
     { name: "Privacy Policy", href: "/privacy" },
   ],
@@ -48,9 +43,14 @@ export default function Footer() {
               India's largest devotional platform. We are committed to building the most trusted destination that serves the devotional needs of millions of devotees in India and abroad.
             </p>
             <div className="flex gap-4">
-              {[FiFacebook, FiTwitter, FiInstagram, FiYoutube].map((Icon, idx) => (
-                <a key={idx} href="#" className="w-10 h-10 rounded-full bg-[#1E293B] flex items-center justify-center hover:bg-[#F26622] hover:text-white transition-all shadow-sm">
-                  <Icon size={18} />
+              {[
+                { Icon: FiFacebook, href: "https://www.facebook.com/merepanditjii" },
+                { Icon: FiTwitter, href: "https://x.com/merepanditjii" },
+                { Icon: FiInstagram, href: "https://www.instagram.com/merepanditjii/" },
+                { Icon: FiYoutube, href: "https://www.youtube.com/@MerePanditJi" },
+              ].map((social, idx) => (
+                <a key={idx} href={social.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-[#1E293B] flex items-center justify-center hover:bg-[#F26622] hover:text-white transition-all shadow-sm">
+                  <social.Icon size={18} />
                 </a>
               ))}
             </div>

@@ -2,39 +2,41 @@
 
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
-import { FiStar } from "react-icons/fi";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 
-const reviews = [
+const videoReviews = [
   {
-    name: "Aarti Sharma",
-    location: "Mumbai, Maharashtra",
-    rating: 5,
-    text: "The online Rudrabhishek puja was conducted with such devotion and authenticity. I felt completely connected despite being miles away. Highly recommended for NRIs and busy professionals.",
+    videoId: "MxQ_GS7Ej6c",
+    name: "Achutam Nair",
+    location: "Bangalore",
+    initials: "AN"
+  },
+  {
+    videoId: "CMFB1JbdiOs",
+    name: "Abhishek Singh",
+    location: "Bangalore",
     initials: "AS"
   },
   {
-    name: "Vikram Singh",
-    location: "Delhi",
-    rating: 5,
-    text: "Excellent service! The pandit ji was highly knowledgeable and explained the significance of every mantra. The platform is very easy to use and completely transparent.",
-    initials: "VS"
+    videoId: "x4e5XxKxvfs",
+    name: "Amrita Singh",
+    location: "Mumbai",
+    initials: "AS"
   },
   {
-    name: "Priya Patel",
-    location: "Ahmedabad, Gujarat",
-    rating: 5,
-    text: "I booked a Navchandi Yagya for my new business. The arrangement, the live stream quality, and the overall spiritual vibe were unmatched. Will definitely use again.",
-    initials: "PP"
+    videoId: "eZG6lv7TUd8",
+    name: "Arvind Tode",
+    location: "Mumbai",
+    initials: "AT"
   },
   {
-    name: "Rahul Verma",
-    location: "Bangalore, Karnataka",
-    rating: 5,
-    text: "Beautiful experience! The daily panchang and astrology services are very accurate. The UI is so premium and calming to look at every morning.",
-    initials: "RV"
+    videoId: "wO_g6zGZ7GU",
+    name: "Devotee",
+    location: "India",
+    initials: "D"
   }
 ];
 
@@ -42,66 +44,97 @@ export default function Reviews() {
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       {/* Decorative Blob */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-accent/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#F26622]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3" />
+
+      <style>{`
+        .reviews-swiper .swiper-pagination-bullet {
+          width: 10px;
+          height: 10px;
+          background: #D1D5DB;
+          opacity: 1;
+          margin: 0 6px !important;
+        }
+        .reviews-swiper .swiper-pagination-bullet-active {
+          background: #F26622;
+        }
+        .reviews-swiper .swiper-button-next,
+        .reviews-swiper .swiper-button-prev {
+          color: #F26622;
+          background: white;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .reviews-swiper .swiper-button-next:after,
+        .reviews-swiper .swiper-button-prev:after {
+          font-size: 16px;
+          font-weight: bold;
+        }
+      `}</style>
       
       <div className="container mx-auto px-4 md:px-8 relative z-10">
-        <div className="text-center mb-16 max-w-3xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-brand-primary font-medium tracking-wider uppercase mb-2 text-sm flex items-center justify-center gap-2"
-          >
-            <span className="w-8 h-px bg-brand-primary" /> Testimonials <span className="w-8 h-px bg-brand-primary" />
-          </motion.div>
+        <div className="text-center mb-12 max-w-3xl mx-auto">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6"
+            className="text-4xl md:text-5xl font-bold text-[#0F172A] mb-4 font-serif"
           >
-            Words from Devotees
+            Reviews & Ratings
           </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-gray-500 text-lg"
+          >
+            Read to what our beloved devotees have to say about Mere Pandit Ji.
+          </motion.p>
         </div>
 
-        <Swiper
-          modules={[Autoplay, Pagination]}
-          spaceBetween={30}
-          slidesPerView={1}
-          breakpoints={{
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          }}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
-          pagination={{ clickable: true, dynamicBullets: true }}
-          className="!pb-16"
-        >
-          {reviews.map((review, index) => (
-            <SwiperSlide key={index} className="h-auto">
-              <div className="h-full bg-bg-base/50 backdrop-blur-sm border border-gray-100 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                <div className="flex text-brand-accent mb-6">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <FiStar key={i} fill="currentColor" size={20} />
-                  ))}
-                </div>
-                
-                <p className="text-gray-700 leading-relaxed italic mb-8 flex-1 text-lg">
-                  "{review.text}"
-                </p>
-                
-                <div className="flex items-center gap-4 mt-auto">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center text-white font-serif font-bold text-lg shadow-md">
-                    {review.initials}
+        <div className="relative max-w-[1400px] mx-auto">
+          <Swiper
+            modules={[Autoplay, Pagination, Navigation]}
+            spaceBetween={24}
+            slidesPerView={1}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+              1280: { slidesPerView: 4 },
+            }}
+            autoplay={{ delay: 6000, disableOnInteraction: false }}
+            pagination={{ clickable: true }}
+            navigation={true}
+            className="reviews-swiper !pb-16 !px-4"
+          >
+            {videoReviews.map((review, index) => (
+              <SwiperSlide key={index} className="h-auto group">
+                <div className="flex flex-col gap-5">
+                  <div className="rounded-2xl overflow-hidden shadow-md aspect-video bg-gray-100 relative transition-transform duration-300 group-hover:-translate-y-1">
+                    <iframe
+                      className="w-full h-full absolute inset-0"
+                      src={`https://www.youtube.com/embed/${review.videoId}?rel=0`}
+                      title={`Video Testimonial by ${review.name}`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">{review.name}</h4>
-                    <p className="text-sm text-gray-500">{review.location}</p>
+                  <div className="flex items-center gap-4 px-2">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0F172A] to-[#1E293B] flex items-center justify-center text-white font-serif font-bold text-lg shadow-sm flex-shrink-0">
+                      {review.initials}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-[#0F172A] text-base leading-tight">{review.name}</h4>
+                      <p className="text-sm text-gray-500 mt-0.5">{review.location}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
     </section>
   );

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { FiMapPin, FiCalendar, FiClock, FiCheckCircle } from "react-icons/fi";
+import { useCountry } from "@/context/CountryContext";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,7 +14,8 @@ const pujas = [
     title: "Maha Rudrabhishek Puja",
     temple: "Kashi Vishwanath, Varanasi",
     date: "15 Aug 2026",
-    price: "₹2,100",
+    priceInr: "2,100",
+    priceUsd: "51",
     benefits: ["Health & Wealth", "Removes Obstacles", "Inner Peace"],
     gradient: "from-orange-500 to-brand-primary",
   },
@@ -21,7 +23,8 @@ const pujas = [
     title: "Navchandi Yagya",
     temple: "Kamakhya Devi, Guwahati",
     date: "22 Aug 2026",
-    price: "₹5,100",
+    priceInr: "5,100",
+    priceUsd: "101",
     benefits: ["Protection", "Prosperity", "Success"],
     gradient: "from-brand-secondary to-red-500",
   },
@@ -29,13 +32,15 @@ const pujas = [
     title: "Satyanarayan Katha",
     temple: "Tirupati Balaji",
     date: "30 Aug 2026",
-    price: "₹1,100",
+    priceInr: "1,100",
+    priceUsd: "31",
     benefits: ["Family Harmony", "Business Growth"],
     gradient: "from-amber-500 to-yellow-600",
   },
 ];
 
 export default function FeaturedPuja() {
+  const { country, currencySymbol } = useCountry();
   return (
     <section className="py-24 bg-bg-base relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMiIgZmlsbD0iI0U2N0UyMiIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3N2Zz4=')] opacity-50" />
@@ -125,7 +130,9 @@ export default function FeaturedPuja() {
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-gray-500 font-medium">Starting from</p>
-                      <p className="font-serif font-bold text-xl text-brand-primary">{puja.price}</p>
+                      <p className="font-serif font-bold text-xl text-brand-primary">
+                        {currencySymbol}{country === "india" ? puja.priceInr : (country === "other" ? puja.priceUsd : puja.priceInr)}
+                      </p>
                     </div>
                   </div>
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiCalendar, FiMapPin, FiCheck, FiChevronRight, FiChevronLeft, FiShield, FiVideo, FiGift, FiClock, FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
 import { GoHome } from "react-icons/go";
+import { useCountry } from "@/context/CountryContext";
 
 interface PackageType {
   id: string;
@@ -45,16 +46,23 @@ interface PujaDetailsClientProps {
 }
 
 export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
+  const { country, currencySymbol } = useCountry();
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [activePricingTab, setActivePricingTab] = useState<"india" | "nri">("india");
+
+  useEffect(() => {
+    if (country) {
+      setActivePricingTab(country === "india" ? "india" : "nri");
+    }
+  }, [country]);
   const [activeTab, setActiveTab] = useState("about");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [timeLeft, setTimeLeft] = useState({
-    days: 4,
-    hours: 13,
-    minutes: 12,
-    seconds: 52,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
   const packagesRef = useRef<HTMLDivElement>(null);
@@ -100,25 +108,38 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
 
   // Countdown timer logic
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
-        } else if (prev.minutes > 0) {
-          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        } else if (prev.hours > 0) {
-          return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        } else if (prev.days > 0) {
-          return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
-        } else {
-          clearInterval(timer);
-          return prev;
+    const calculateTimeLeft = () => {
+      try {
+        const cleanDateStr = puja.date.split(',')[0].trim();
+        const targetDate = new Date(cleanDateStr);
+        if (isNaN(targetDate.getTime())) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        
+        const now = new Date().getTime();
+        const difference = targetDate.getTime() - now;
+
+        if (difference <= 0) {
+          return { days: 0, hours: 0, minutes: 0, seconds: 0 };
         }
-      });
+
+        return {
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        };
+      } catch (e) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      }
+    };
+
+    setTimeLeft(calculateTimeLeft());
+
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [puja.date]);
 
   const scrollToPackages = () => {
     packagesRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -594,13 +615,13 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                   
                   <div className="flex items-baseline gap-2 mb-6">
                     <span className="text-3xl font-black text-gray-900">
-                      {activePricingTab === "india" ? "₹" : "C$"}
+                      {currencySymbol}
                       {pkg.price}
                     </span>
                     {pkg.originalPrice && (
                       <>
                         <span className="text-sm text-gray-400 line-through">
-                          {activePricingTab === "india" ? "₹" : "C$"}
+                          {currencySymbol}
                           {pkg.originalPrice}
                         </span>
                         <span className="text-xs text-emerald-600 font-extrabold bg-emerald-50 px-2 py-0.5 rounded-md">
