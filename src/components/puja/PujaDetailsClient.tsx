@@ -6,6 +6,8 @@ import Link from "next/link";
 import { FiCalendar, FiMapPin, FiCheck, FiChevronRight, FiChevronLeft, FiShield, FiVideo, FiGift, FiClock, FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
 import { GoHome } from "react-icons/go";
 import { useCountry } from "@/context/CountryContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface PackageType {
   id: string;
@@ -46,9 +48,16 @@ interface PujaDetailsClientProps {
 }
 
 export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
+  const router = useRouter();
   const { country, currencySymbol } = useCountry();
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [activePricingTab, setActivePricingTab] = useState<"india" | "nri">("india");
+  const [isPackagePopupOpen, setIsPackagePopupOpen] = useState(false);
+  const [isDetailsPopupOpen, setIsDetailsPopupOpen] = useState(false);
+  const [selectedPkg, setSelectedPkg] = useState<PackageType | null>(null);
+  const [whatsappName, setWhatsappName] = useState("");
+  const [whatsappPhone, setWhatsappPhone] = useState("");
+  const [detailsError, setDetailsError] = useState("");
 
   useEffect(() => {
     if (country) {
@@ -374,7 +383,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
 
             {/* Participate Button - Shopify Green matching screenshot */}
             <button 
-              onClick={scrollToPackages}
+              onClick={() => setIsPackagePopupOpen(true)}
               className="w-full bg-[#008060] hover:bg-[#00664d] text-white text-[15px] font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99]"
             >
               Select puja package <span className="text-lg leading-none">→</span>
@@ -747,6 +756,225 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
         </div>
 
       </div>
+
+      {/* Package Selection Modal */}
+      <AnimatePresence>
+        {isPackagePopupOpen && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsPackagePopupOpen(false)}
+              className="absolute inset-0 bg-[#0B1120]/80 backdrop-blur-sm"
+            />
+            
+            {/* Modal Content */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-5xl bg-[#F9FAFB] rounded-[24px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              {/* Header */}
+              <div className="bg-white border-b border-gray-100 p-5 flex items-center justify-between sticky top-0 z-10">
+                <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
+                  <span>🎁</span> Select Puja Package
+                </h2>
+                <button 
+                  onClick={() => setIsPackagePopupOpen(false)}
+                  className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-900 transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Scrollable Content */}
+              <div className="p-6 overflow-y-auto custom-scrollbar">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {currentPackages.map((pkg) => (
+                    <div 
+                      key={pkg.id} 
+                      className="bg-white rounded-3xl border border-gray-200 hover:border-[#FF7F3F] hover:shadow-xl p-5 transition-all duration-300 relative flex flex-col justify-between shadow-sm"
+                    >
+                      {/* Tag */}
+                      {(pkg.tag || (pkg.price >= 1100 ? "Recommended" : pkg.price >= 501 ? "Best Value" : "Popular")) && (
+                        <span className={`absolute top-0 right-0 text-white text-[10px] font-extrabold px-3 py-1 rounded-bl-2xl ${
+                          pkg.tagColor || (pkg.price >= 1100 ? "bg-emerald-600" : pkg.price >= 501 ? "bg-[#FF7F3F]" : "bg-blue-600")
+                        }`}>
+                          {pkg.tag || (pkg.price >= 1100 ? "Recommended" : pkg.price >= 501 ? "Best Value" : "Popular")}
+                        </span>
+                      )}
+                      
+                      <div>
+                        <h3 className="font-extrabold text-lg text-gray-900 mb-2 pr-12 leading-tight">
+                          {pkg.title}
+                        </h3>
+                        <p className="text-gray-500 text-[11px] leading-relaxed mb-4">
+                          {pkg.description}
+                        </p>
+                        <div className="flex items-baseline gap-2 mb-4">
+                          <span className="text-2xl font-black text-gray-900">
+                            {currencySymbol}
+                            {pkg.price}
+                          </span>
+                          {pkg.originalPrice && (
+                            <>
+                              <span className="text-xs text-gray-400 line-through">
+                                {currencySymbol}
+                                {pkg.originalPrice}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <div className="border-t border-gray-100 pt-4 space-y-2.5 mb-6">
+                          {pkg.features.map((feat, i) => (
+                            <div key={i} className="flex items-start gap-2 text-[11px] text-gray-600">
+                              <FiCheck className="text-emerald-500 flex-shrink-0 mt-0.5" />
+                              <span>{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button 
+                        onClick={() => {
+                          setSelectedPkg(pkg);
+                          setIsPackagePopupOpen(false);
+                          setIsDetailsPopupOpen(true);
+                        }}
+                        className="w-full mt-auto bg-[#117B50] hover:bg-[#0D6240] text-white text-xs font-bold tracking-widest uppercase py-3 rounded-xl transition-all shadow-sm"
+                      >
+                        Proceed to Book
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {/* Details Popup */}
+        {isDetailsPopupOpen && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsDetailsPopupOpen(false)}
+              className="absolute inset-0 bg-[#0B1120]/60 backdrop-blur-sm"
+            />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            >
+              {/* Header */}
+              <div className="bg-white border-b border-gray-100 p-4 flex items-center gap-3">
+                <button 
+                  onClick={() => {
+                    setIsDetailsPopupOpen(false);
+                    setIsPackagePopupOpen(true);
+                  }}
+                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <FiChevronLeft size={24} className="text-gray-800" />
+                </button>
+                <h2 className="text-lg font-bold text-gray-900">Fill your details for Puja</h2>
+              </div>
+
+              {/* Form Content */}
+              <div className="p-5 space-y-5">
+                <div>
+                  <h3 className="font-bold text-[#002D5B] text-sm mb-1.5">Enter Your Whatsapp Mobile Number</h3>
+                  <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+                    Your Puja booking updates like Puja Photos, Videos and other details will be sent on WhatsApp on below number.
+                  </p>
+                  
+                  <div className="relative">
+                    <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400 z-10">Your mobile Number</label>
+                    <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all bg-white relative">
+                      <div className="pl-3 pr-2 py-3 flex items-center gap-1.5 text-gray-500 border-r border-gray-200">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-5 h-5" />
+                        <span className="text-sm font-medium">+91</span>
+                      </div>
+                      <input 
+                        type="tel"
+                        value={whatsappPhone}
+                        onChange={(e) => {
+                          setWhatsappPhone(e.target.value);
+                          setDetailsError("");
+                        }}
+                        className="w-full py-3 px-3 text-sm focus:outline-none text-gray-900 font-medium"
+                      />
+                    </div>
+                  </div>
+                  {detailsError && detailsError.includes("phone") && (
+                    <p className="text-red-500 text-xs mt-1.5 font-medium">{detailsError}</p>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="font-bold text-[#002D5B] text-sm mb-2">Enter Your Name</h3>
+                  <div className="relative">
+                    <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400 z-10">Your full Name</label>
+                    <input 
+                      type="text"
+                      value={whatsappName}
+                      onChange={(e) => {
+                        setWhatsappName(e.target.value);
+                        setDetailsError("");
+                      }}
+                      className="w-full border border-gray-300 py-3 px-4 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm font-medium text-gray-900"
+                    />
+                  </div>
+                  {detailsError && detailsError.includes("name") && (
+                    <p className="text-red-500 text-xs mt-1.5 font-medium">{detailsError}</p>
+                  )}
+                </div>
+
+                <button 
+                  onClick={() => {
+                    if (whatsappPhone.length < 10) {
+                      setDetailsError("Please enter valid phone number");
+                      return;
+                    }
+                    if (!whatsappName.trim()) {
+                      setDetailsError("Please enter valid name");
+                      return;
+                    }
+                    // Handle Next Step
+                    const bookingData = {
+                      pujaTitle: puja.title,
+                      pujaDate: puja.date,
+                      pujaLocation: puja.location,
+                      packageId: selectedPkg?.id,
+                      packageTitle: selectedPkg?.title,
+                      packagePrice: selectedPkg?.price,
+                      currency: currencySymbol,
+                      customerName: whatsappName,
+                      customerPhone: whatsappPhone,
+                    };
+                    localStorage.setItem("pending_booking", JSON.stringify(bookingData));
+                    router.push("/cart");
+                  }}
+                  className={`w-full py-3.5 rounded-lg font-bold text-[15px] transition-all ${
+                    whatsappPhone.length >= 10 && whatsappName.length > 0
+                      ? "bg-[#8A9FB4] text-white hover:bg-[#728599]"
+                      : "bg-[#A8B7C7] text-white/90 cursor-not-allowed"
+                  }`}
+                >
+                  Next
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

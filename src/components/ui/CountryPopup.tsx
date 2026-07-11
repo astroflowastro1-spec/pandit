@@ -3,16 +3,29 @@
 import { useCountry } from "@/context/CountryContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { FiUser, FiPhone } from "react-icons/fi";
 
 export default function CountryPopup() {
-  const { country, setCountry, isReady } = useCountry();
+  const { isReady, hasSubmittedDetails, submitDetails } = useCountry();
   const [mounted, setMounted] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || !isReady || country !== null) return null;
+  if (!mounted || !isReady || hasSubmittedDetails) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !phone.trim()) {
+      setError("Please fill in all details to continue.");
+      return;
+    }
+    submitDetails(name, phone);
+  };
 
   return (
     <AnimatePresence>
@@ -27,35 +40,50 @@ export default function CountryPopup() {
           
           <div className="text-center relative z-10 mb-8">
             <div className="w-16 h-16 bg-[#FFF4EB] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[#F26622]/20">
-              <span className="text-3xl">🌍</span>
+              <span className="text-3xl">🙏</span>
             </div>
-            <h2 className="text-2xl font-black text-gray-900 mb-2 font-serif">Select Your Location</h2>
-            <p className="text-gray-500 text-sm">Please select your country to see accurate pricing and available services.</p>
+            <h2 className="text-2xl font-black text-gray-900 mb-2 font-serif">Welcome to Mere Pandit Ji</h2>
+            <p className="text-gray-500 text-sm">Please enter your details to personalize your spiritual journey.</p>
           </div>
 
-          <div className="space-y-3 relative z-10">
-            <button 
-              onClick={() => setCountry("india")}
-              className="w-full flex items-center justify-between p-4 rounded-xl border-2 border-gray-100 hover:border-[#F26622] hover:bg-[#FFF4EB] transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🇮🇳</span>
-                <span className="font-bold text-gray-900">India</span>
-              </div>
-              <span className="text-gray-400 group-hover:text-[#F26622] font-bold">₹ INR →</span>
-            </button>
+          <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
+            {error && <p className="text-red-500 text-xs font-bold text-center">{error}</p>}
             
-            <button 
-              onClick={() => setCountry("other")}
-              className="w-full flex items-center justify-between p-4 rounded-xl border-2 border-gray-100 hover:border-[#F26622] hover:bg-[#FFF4EB] transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🌎</span>
-                <span className="font-bold text-gray-900">Other Country</span>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-gray-700 ml-1">Full Name</label>
+              <div className="relative">
+                <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input 
+                  type="text" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your name"
+                  className="w-full pl-10 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#F26622] focus:ring-1 focus:ring-[#F26622] transition-all text-sm"
+                />
               </div>
-              <span className="text-gray-400 group-hover:text-[#F26622] font-bold">$ USD →</span>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-gray-700 ml-1">Phone Number</label>
+              <div className="relative">
+                <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input 
+                  type="tel" 
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Enter your phone number"
+                  className="w-full pl-10 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#F26622] focus:ring-1 focus:ring-[#F26622] transition-all text-sm"
+                />
+              </div>
+            </div>
+
+            <button 
+              type="submit"
+              className="w-full mt-6 bg-[#F26622] hover:bg-[#D95B1E] text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-orange-500/30 active:scale-[0.98]"
+            >
+              Continue to Website
             </button>
-          </div>
+          </form>
         </motion.div>
       </div>
     </AnimatePresence>
