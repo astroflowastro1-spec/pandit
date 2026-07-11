@@ -1,0 +1,731 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { FiCalendar, FiMapPin, FiCheck, FiChevronRight, FiChevronLeft, FiShield, FiVideo, FiGift, FiClock, FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
+import { GoHome } from "react-icons/go";
+
+interface PackageType {
+  id: string;
+  title: string;
+  price: number;
+  originalPrice?: number;
+  description: string;
+  features: string[];
+  tag?: string;
+  tagColor?: string;
+}
+
+interface PujaDetailsClientProps {
+  puja: {
+    _id: string;
+    title: string;
+    slug: string;
+    redSubtitle: string;
+    description: string;
+    location: string;
+    date: string;
+    imageSrc: string;
+    sliderImage1Src?: string;
+    sliderImage2Src?: string;
+    subtitle?: string;
+    whyThisPuja?: string;
+    aboutTemple?: string;
+    templeImageSrc?: string;
+    benefits?: string[];
+    inclusions?: string[];
+    packages?: {
+      india: PackageType[];
+      nri: PackageType[];
+    } | null;
+    badge?: string;
+    badgeColor?: string;
+  };
+}
+
+export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [activePricingTab, setActivePricingTab] = useState<"india" | "nri">("india");
+  const [activeTab, setActiveTab] = useState("about");
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [timeLeft, setTimeLeft] = useState({
+    days: 4,
+    hours: 13,
+    minutes: 12,
+    seconds: 52,
+  });
+
+  const packagesRef = useRef<HTMLDivElement>(null);
+
+  // Scrollspy effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 180;
+      const sections = ["about", "benefits", "process", "temple", "packages", "reviews", "faqs"];
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveTab(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleTabClick = (id: string) => {
+    setActiveTab(id);
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 140; // account for header + sticky tab bar
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  // Countdown timer logic
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev.seconds > 0) {
+          return { ...prev, seconds: prev.seconds - 1 };
+        } else if (prev.minutes > 0) {
+          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+        } else if (prev.hours > 0) {
+          return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        } else if (prev.days > 0) {
+          return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
+        } else {
+          clearInterval(timer);
+          return prev;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const scrollToPackages = () => {
+    packagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Determine current packages based on selected tab or defaults
+  const getPackagesList = (): PackageType[] => {
+    if (puja.packages) {
+      return activePricingTab === "india" ? puja.packages.india : puja.packages.nri;
+    }
+    
+    // Default fallback packages if not provided by database
+    return [
+      {
+        id: "individual",
+        title: "Individual Puja",
+        price: 851,
+        originalPrice: 1500,
+        description: "Puja will be performed with your Name and Gotra. Video recording of Sankalp & Havan will be shared.",
+        features: [
+          "Sankalp with 1 Name & Gotra",
+          "Puja Video Clip via WhatsApp",
+          "Dry Fruits Prasad (100g) + Deity Photo"
+        ],
+        tag: "Popular",
+        tagColor: "bg-blue-600"
+      },
+      {
+        id: "family",
+        title: "Family Puja (Up to 4 Members)",
+        price: 1501,
+        originalPrice: 2500,
+        description: "Puja performed for the entire family. Detailed Sankalp with all names. Premium Aashirwad Box sent to your home.",
+        features: [
+          "Sankalp with up to 4 Names & Gotras",
+          "Full Puja Video Clip via WhatsApp",
+          "Aashirwad Box (Prasad, Kalava, Sindoor, Deity Photo)"
+        ],
+        tag: "Best Value",
+        tagColor: "bg-[#FF7F3F]"
+      },
+      {
+        id: "havan",
+        title: "Special Maha Havan (Joint)",
+        price: 2501,
+        originalPrice: 4500,
+        description: "Special Havan performed for health, wealth & protection from evil eye. Ultimate Aashirwad Box + energized Yantra.",
+        features: [
+          "Maha Sankalp with Family Names & Gotras",
+          "Detailed Video & Live Sankalp Photo",
+          "Maha Prasad Box (Prasad, Energized Yantra, Kalava, Janeu, Diya)"
+        ],
+        tag: "Recommended",
+        tagColor: "bg-emerald-600"
+      }
+    ];
+  };
+
+  const currentPackages = getPackagesList();
+
+  // Dynamic benefits list
+  const benefitsList = puja.benefits && puja.benefits.length > 0 ? puja.benefits : [
+    "Destruction of negative influences and enemy effects",
+    "Spiritual strength and inner awakening",
+    "Fulfilment of sincere desires and prayers",
+    "Protection, courage and renewed confidence",
+    "Blessings believed to reach even from a distance, in one's name"
+  ];
+
+  const sliderImages = [puja.imageSrc, puja.sliderImage1Src, puja.sliderImage2Src].filter(Boolean) as string[];
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length);
+  };
+
+  // Auto-slide effect
+  useEffect(() => {
+    if (sliderImages.length <= 1) return;
+    
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
+    }, 4000); // Change image every 4 seconds
+    
+    return () => clearInterval(interval);
+  }, [sliderImages.length]);
+
+  return (
+    <div className="bg-white min-h-screen font-sans">
+      
+      <div className="container mx-auto px-4 md:px-8 lg:px-16 py-8">
+        
+        {/* Top Grid: Image Card (Left) & Info Block (Right) - Exactly matching screenshot */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-16 pt-6">
+          
+          {/* Left Column - Deity Image Card */}
+          <div className="lg:col-span-7 lg:mt-7">
+            <div className="bg-white rounded-3xl overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.05)] border border-gray-100 p-0">
+              
+              {/* Image Section */}
+              <div className="relative w-full h-[350px] md:h-[480px] overflow-hidden group">
+                <Image 
+                  src={sliderImages[currentSlide]} 
+                  alt={puja.title} 
+                  fill
+                  className="object-cover object-center transition-opacity duration-500"
+                  priority
+                />
+                
+                {sliderImages.length > 1 && (
+                  <>
+                    {/* Prev Slide Arrow Button */}
+                    <button 
+                      onClick={prevSlide}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg text-gray-800 hover:bg-white hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100"
+                    >
+                      <FiChevronLeft size={22} />
+                    </button>
+                    {/* Next Slide Arrow Button */}
+                    <button 
+                      onClick={nextSlide}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg text-gray-800 hover:bg-white hover:scale-105 transition-all z-10 opacity-0 group-hover:opacity-100"
+                    >
+                      <FiChevronRight size={22} />
+                    </button>
+
+                    {/* Dots Indicator */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                      {sliderImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentSlide(idx)}
+                          className={`w-2 h-2 rounded-full transition-all ${currentSlide === idx ? "bg-white w-4" : "bg-white/50"}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+            </div>
+          </div>
+
+          {/* Right Column - Booking Info */}
+          <div className="lg:col-span-5 space-y-6 lg:pl-4">
+            <div>
+              {/* Pink Header Badge */}
+              <span className="text-[#D11A60] text-xs font-black tracking-widest uppercase block mb-3 leading-snug">
+                {puja.redSubtitle}
+              </span>
+              
+              {/* Title */}
+              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-950 leading-snug tracking-tight mb-2">
+                {puja.title}
+              </h1>
+              
+              {/* Subtitle */}
+              <p className="text-gray-500 text-sm md:text-base font-semibold leading-relaxed mb-6">
+                {puja.subtitle || "for Supreme Protection, Severe Enemy Defeat and Karmic Darkness Removal"}
+              </p>
+            </div>
+
+            {/* Location & Date */}
+            <div className="space-y-3.5 border-b border-gray-100 pb-6 text-sm text-gray-700">
+              <div className="flex items-start gap-3">
+                <GoHome className="text-lg text-[#E87A25] flex-shrink-0 mt-0.5" />
+                <span className="font-semibold text-gray-800 leading-snug">{puja.location}</span>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <FiCalendar className="text-lg text-[#E87A25] flex-shrink-0 mt-0.5" />
+                <span className="font-semibold text-gray-800 leading-snug">{puja.date}</span>
+              </div>
+            </div>
+
+            {/* Timer Block - No outer border card, matched styling */}
+            <div className="space-y-2.5">
+              <p className="text-gray-700 text-sm font-extrabold">
+                Puja booking will close in :
+              </p>
+              
+              <div className="flex items-center gap-2">
+                {/* Days */}
+                <div className="bg-[#FFF4EB] border border-[#F3912E]/10 rounded-lg px-3 py-1.5 flex items-baseline gap-1 shadow-sm">
+                  <span className="font-extrabold text-[#E67E22] text-lg leading-none">{timeLeft.days}</span>
+                  <span className="text-[10px] font-black text-[#E67E22] uppercase tracking-wider">Days</span>
+                </div>
+                
+                {/* Hours */}
+                <div className="bg-[#FFF4EB] border border-[#F3912E]/10 rounded-lg px-3 py-1.5 flex items-baseline gap-1 shadow-sm">
+                  <span className="font-extrabold text-[#E67E22] text-lg leading-none">{timeLeft.hours}</span>
+                  <span className="text-[10px] font-black text-[#E67E22] uppercase tracking-wider">Hours</span>
+                </div>
+                
+                {/* Mins */}
+                <div className="bg-[#FFF4EB] border border-[#F3912E]/10 rounded-lg px-3 py-1.5 flex items-baseline gap-1 shadow-sm">
+                  <span className="font-extrabold text-[#E67E22] text-lg leading-none">{timeLeft.minutes}</span>
+                  <span className="text-[10px] font-black text-[#E67E22] uppercase tracking-wider">Mins</span>
+                </div>
+                
+                {/* Secs */}
+                <div className="bg-[#FFF4EB] border border-[#F3912E]/10 rounded-lg px-3 py-1.5 flex items-baseline gap-1 shadow-sm">
+                  <span className="font-extrabold text-[#E67E22] text-lg leading-none">{timeLeft.seconds}</span>
+                  <span className="text-[10px] font-black text-[#E67E22] uppercase tracking-wider">Secs</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Ratings and Devotees Row - 7 avatars and dotted ratings text */}
+            <div className="flex flex-wrap items-center gap-3.5 pt-2">
+              <div className="flex -space-x-2">
+                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/32.jpg" alt="devotee" width={28} height={28} />
+                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/46.jpg" alt="devotee" width={28} height={28} />
+                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/women/44.jpg" alt="devotee" width={28} height={28} />
+                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/62.jpg" alt="devotee" width={28} height={28} />
+                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/22.jpg" alt="devotee" width={28} height={28} />
+                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/women/24.jpg" alt="devotee" width={28} height={28} />
+                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/52.jpg" alt="devotee" width={28} height={28} />
+              </div>
+              <span className="text-xs md:text-sm font-extrabold text-[#FF7F3F] flex items-center gap-1">
+                <span>★ 4.9</span>
+                <span className="border-b border-dashed border-[#FF7F3F] pb-0.5 cursor-pointer">(7K+ ratings)</span>
+              </span>
+            </div>
+
+            <p className="text-[13px] md:text-sm text-gray-500 font-semibold leading-relaxed">
+              Till now <span className="text-[#FF7F3F] font-black">3,00,000+ Devotees</span> have participated in Pujas conducted by Mere Pandit Ji Seva.
+            </p>
+
+            {/* Participate Button - Shopify Green matching screenshot */}
+            <button 
+              onClick={scrollToPackages}
+              className="w-full bg-[#008060] hover:bg-[#00664d] text-white text-[15px] font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99]"
+            >
+              Select puja package <span className="text-lg leading-none">→</span>
+            </button>
+
+          </div>
+
+        </div>
+
+        {/* Navigation Tabs Bar */}
+        <div className="sticky top-[70px] md:top-[80px] bg-white z-30 border-t border-b border-gray-100 py-3.5 mb-10 -mx-4 px-4 md:mx-0 md:px-0 shadow-sm">
+          <div className="flex items-center justify-start md:justify-center gap-6 md:gap-12 overflow-x-auto scrollbar-none">
+            {[
+              { id: "about", label: "About Puja" },
+              { id: "benefits", label: "Benefits" },
+              { id: "process", label: "Process" },
+              { id: "temple", label: "Temple Details" },
+              { id: "packages", label: "Packages" },
+              { id: "reviews", label: "Reviews" },
+              { id: "faqs", label: "FAQs" }
+            ].map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabClick(tab.id)}
+                  className={`text-[13px] md:text-sm font-extrabold pb-1.5 relative whitespace-nowrap transition-colors ${
+                    isActive ? "text-[#E67E22]" : "text-gray-500 hover:text-gray-900"
+                  }`}
+                >
+                  {tab.label}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#E67E22] rounded-full" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Middle Section: Description & Significance (See More) */}
+        <div id="about" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-12">
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-6 flex items-start gap-2 leading-relaxed">
+            <span>⚔️</span>
+            <span>
+              During the highly spiritually potent Gupt Navratri, participate in the rare Tri Maha Shakti Puja and Homam of Mahakali, Kaal Bhairav, and Mahadev to invoke one of the strongest forms of divine protection described in Sanatan Dharma.
+            </span>
+          </h2>
+          
+          <div className="relative">
+            <div className={`transition-all duration-300 overflow-hidden ${showFullDesc ? 'max-h-none' : 'max-h-[140px]'}`}>
+              {/* Question Subtitle in screenshot style */}
+              <div className="flex items-center gap-2 mb-4 text-[#6B46C1] font-bold text-sm md:text-[15px]">
+                <span>-</span>
+                <span className="text-[#805AD5] text-base">📅</span>
+                <span>Why is Gupt Navratri considered the most powerful time for protection sadhana?</span>
+              </div>
+              
+              <p className="whitespace-pre-line leading-relaxed text-gray-500 font-medium text-[14px] md:text-[15px]">{puja.whyThisPuja || puja.description}</p>
+            </div>
+            
+            {/* Fade overlay for collapsed text */}
+            {!showFullDesc && (
+              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+            )}
+          </div>
+
+          <button 
+            onClick={() => setShowFullDesc(!showFullDesc)}
+            className="mt-3 text-[#E67E22] hover:text-[#d35400] text-sm font-extrabold flex items-center gap-1 transition-colors"
+          >
+            <span>{showFullDesc ? "See Less" : "See More"}</span>
+            <FiChevronDown className={`transition-transform duration-200 ${showFullDesc ? "rotate-180" : ""}`} />
+          </button>
+        </div>
+
+        {/* About Temple Section */}
+        {puja.aboutTemple && (
+          <div id="temple" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-12">
+            <h2 className="text-xl md:text-2xl font-black text-gray-955 mb-6 flex items-center gap-2.5">
+              <span>🕌</span> About Temple
+            </h2>
+            <div className="bg-[#FFFDF6] border border-[#F3912E]/5 rounded-3xl p-6 md:p-8 shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                {puja.templeImageSrc && (
+                  <div className="md:col-span-5 relative w-full h-[250px] md:h-[300px] rounded-2xl overflow-hidden shadow-sm">
+                    <Image 
+                      src={puja.templeImageSrc} 
+                      alt="Temple" 
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className={puja.templeImageSrc ? "md:col-span-7" : "md:col-span-12"}>
+                  <p className="text-gray-600 text-[15px] leading-relaxed whitespace-pre-line">
+                    {puja.aboutTemple}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Benefits Section */}
+        <div id="benefits" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-16">
+          <h2 className="text-[22px] md:text-2xl font-black text-gray-955 mb-8 tracking-tight">Puja Benefits</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            {benefitsList.map((benefit, index) => (
+              <div key={index} className="bg-[#FCFBF9] p-6 rounded-[20px] shadow-[0_2px_15px_rgba(0,0,0,0.02)] flex flex-col gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#FFF5EE] flex items-center justify-center">
+                  <span className="text-xl drop-shadow-sm">🌸</span>
+                </div>
+                <h3 className="font-extrabold text-gray-900 text-[15px] md:text-base leading-snug">{benefit}</h3>
+                <span className="text-[#F1592A] hover:underline text-[13px] font-bold cursor-pointer mt-1">Read more</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* What Your Puja Includes */}
+        {puja.inclusions && puja.inclusions.length > 0 && (
+          <div className="border-t border-gray-100 pt-10 mb-16">
+            <h2 className="text-2xl font-black text-gray-955 mb-8">What Your Puja Includes</h2>
+            <div className="bg-[#F6FAF8] border border-emerald-100/55 rounded-3xl p-6 md:p-8 shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                {puja.inclusions.map((inc, index) => {
+                  let icon = "✅";
+                  if (inc.toLowerCase().includes("sankalp")) icon = "🙏";
+                  else if (inc.toLowerCase().includes("video") || inc.toLowerCase().includes("whatsapp")) icon = "📱";
+                  else if (inc.toLowerCase().includes("prasad") || inc.toLowerCase().includes("delivery")) icon = "🎁";
+                  else if (inc.toLowerCase().includes("offering") || inc.toLowerCase().includes("flame")) icon = "🔥";
+                  
+                  return (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md flex-shrink-0 border border-gray-50">
+                        <span className="text-lg">{icon}</span>
+                      </div>
+                      <div>
+                        <p className="text-gray-800 font-extrabold text-sm md:text-[15px] leading-snug">{inc}</p>
+                        <p className="text-gray-500 text-xs mt-1">Included in all package selections.</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Process Section */}
+        <div id="process" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-16">
+          <h2 className="text-2xl font-black text-gray-955 mb-8">Puja Process</h2>
+          
+          <div className="relative border-l-2 border-orange-100 ml-4 space-y-8">
+            <div className="relative pl-8">
+              <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[#FF7F3F] ring-4 ring-orange-100" />
+              <h3 className="font-bold text-gray-900 text-base md:text-lg">1. Provide Name & Gotra</h3>
+              <p className="text-gray-500 text-xs md:text-sm mt-1">Submit your name, gotra, and specific wishes during booking checkout.</p>
+            </div>
+            
+            <div className="relative pl-8">
+              <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[#FF7F3F] ring-4 ring-orange-100" />
+              <h3 className="font-bold text-gray-900 text-base md:text-lg">2. Havan & Sankalp is Performed</h3>
+              <p className="text-gray-500 text-xs md:text-sm mt-1">Pandit ji will chant your name & gotra live in the temple for the customized sankalp.</p>
+            </div>
+            
+            <div className="relative pl-8">
+              <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[#FF7F3F] ring-4 ring-orange-100" />
+              <h3 className="font-bold text-gray-900 text-base md:text-lg">3. Get Video Update</h3>
+              <p className="text-gray-500 text-xs md:text-sm mt-1">A video recording of your sankalp & core puja rituals will be sent to your WhatsApp.</p>
+            </div>
+            
+            <div className="relative pl-8">
+              <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[#FF7F3F] ring-4 ring-orange-100" />
+              <h3 className="font-bold text-gray-900 text-base md:text-lg">4. Prasad Delivery</h3>
+              <p className="text-gray-500 text-xs md:text-sm mt-1">Maha Prasad and energized sacred items (Aashirwad Box) will be shipped directly to your home.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Packages Section (target of button scroll) */}
+        <div id="packages" ref={packagesRef} className="scroll-mt-28 border-t border-gray-100 pt-10 mb-16">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <h2 className="text-2xl font-black text-gray-955">Select Puja Package</h2>
+            
+            {/* Tab Selection */}
+            {puja.packages && (
+              <div className="bg-[#F8F9FA] p-1 rounded-xl flex items-center border border-gray-150 self-start sm:self-auto">
+                <button
+                  onClick={() => setActivePricingTab("india")}
+                  className={`px-5 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${
+                    activePricingTab === "india"
+                      ? "bg-white text-[#FF7F3F] shadow-sm"
+                      : "text-gray-500 hover:text-gray-800"
+                  }`}
+                >
+                  🇮🇳 Resident India
+                </button>
+                <button
+                  onClick={() => setActivePricingTab("nri")}
+                  className={`px-5 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${
+                    activePricingTab === "nri"
+                      ? "bg-white text-[#FF7F3F] shadow-sm"
+                      : "text-gray-500 hover:text-gray-800"
+                  }`}
+                >
+                  🌎 NRI / Abroad
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {currentPackages.map((pkg) => (
+              <div 
+                key={pkg.id} 
+                className="bg-white rounded-3xl border border-gray-200 hover:border-[#FF7F3F] hover:shadow-xl p-6 transition-all duration-300 relative flex flex-col justify-between overflow-hidden shadow-sm"
+              >
+                {/* Tag */}
+                {(pkg.tag || (pkg.price >= 1100 ? "Recommended" : pkg.price >= 501 ? "Best Value" : "Popular")) && (
+                  <span className={`absolute top-0 right-0 text-white text-[10px] font-extrabold px-3 py-1 rounded-bl-2xl ${
+                    pkg.tagColor || (pkg.price >= 1100 ? "bg-emerald-600" : pkg.price >= 501 ? "bg-[#FF7F3F]" : "bg-blue-600")
+                  }`}>
+                    {pkg.tag || (pkg.price >= 1100 ? "Recommended" : pkg.price >= 501 ? "Best Value" : "Popular")}
+                  </span>
+                )}
+                
+                <div>
+                  <h3 className="font-extrabold text-xl text-gray-900 mb-2.5 pr-14 leading-tight">
+                    {pkg.title}
+                  </h3>
+                  
+                  <p className="text-gray-500 text-xs leading-relaxed mb-5">
+                    {pkg.description}
+                  </p>
+                  
+                  <div className="flex items-baseline gap-2 mb-6">
+                    <span className="text-3xl font-black text-gray-900">
+                      {activePricingTab === "india" ? "₹" : "C$"}
+                      {pkg.price}
+                    </span>
+                    {pkg.originalPrice && (
+                      <>
+                        <span className="text-sm text-gray-400 line-through">
+                          {activePricingTab === "india" ? "₹" : "C$"}
+                          {pkg.originalPrice}
+                        </span>
+                        <span className="text-xs text-emerald-600 font-extrabold bg-emerald-50 px-2 py-0.5 rounded-md">
+                          {Math.round(((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100)}% OFF
+                        </span>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="border-t border-gray-100 pt-5 space-y-3">
+                    {pkg.features.map((feat, i) => (
+                      <div key={i} className="flex items-start gap-2.5 text-xs text-gray-600">
+                        <FiCheck className="text-emerald-500 flex-shrink-0 mt-0.5" />
+                        <span>{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button className="w-full mt-8 bg-[#117B50] hover:bg-[#0D6240] text-white text-xs font-bold tracking-widest uppercase py-3.5 rounded-xl transition-all shadow-sm">
+                  Proceed to Book
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div id="reviews" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-16">
+          <h2 className="text-2xl font-black text-gray-955 mb-8 flex items-center gap-2">
+            <span>⭐</span> Customer Reviews
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Ramesh Sharma",
+                location: "Delhi, India",
+                rating: 5,
+                date: "04 July 2026",
+                comment: "Highly satisfied with the booking. Got the video updates and the Prasad box arrived within a week. Very transparent and spiritual experience!"
+              },
+              {
+                name: "Meera Patel",
+                location: "London, UK",
+                rating: 5,
+                date: "28 June 2026",
+                comment: "Blessed to have performed the Puja through Mere Pandit Ji from abroad. The Sankalp video was clear and my family felt deeply connected."
+              },
+              {
+                name: "Amit Verma",
+                location: "Mumbai, India",
+                rating: 5,
+                date: "15 June 2026",
+                comment: "Genuine and professional service. The packaging of the Prasad was premium, and the Pandit ji chanted our names and gotra very clearly in the video."
+              }
+            ].map((rev, index) => (
+              <div key={index} className="bg-[#FFFDFB] p-6 rounded-2xl border border-orange-50/50 shadow-[0_4px_12px_rgba(0,0,0,0.01)] flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-1 text-amber-500 mb-3.5">
+                    {[...Array(rev.rating)].map((_, i) => (
+                      <FiStar key={i} className="fill-amber-500 text-amber-500 w-4 h-4" />
+                    ))}
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed mb-6 italic">"{rev.comment}"</p>
+                </div>
+                <div className="border-t border-gray-50 pt-4 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-extrabold text-gray-900 text-sm">{rev.name}</h4>
+                    <p className="text-[11px] text-gray-400 font-semibold">{rev.location}</p>
+                  </div>
+                  <span className="text-[10px] font-bold text-gray-400">{rev.date}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQs Section */}
+        <div id="faqs" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-16">
+          <h2 className="text-2xl font-black text-gray-955 mb-8 flex items-center gap-2">
+            <span>❓</span> Frequently Asked Questions
+          </h2>
+          
+          <div className="space-y-4 max-w-4xl mx-auto">
+            {[
+              {
+                question: "How will the Puja be performed?",
+                answer: "The Puja will be performed by experienced Pandits at the Jwala Ji Temple in Kangra, Himachal Pradesh. It includes a custom Havan and personal Sankalp where your name and gotra are chanted."
+              },
+              {
+                question: "Do I need to be physically present at the temple?",
+                answer: "No, physical presence is not required. The puja is performed on your behalf (Online Puja Seva). A custom Sankalp video recording and the complete puja video will be shared with you on WhatsApp."
+              },
+              {
+                question: "What details do I need to share for booking?",
+                answer: "During booking checkout, you will need to provide the names, gotras, and specific wishes of the family members participating in the puja."
+              },
+              {
+                question: "When and how will I get the Prasad?",
+                answer: "Prasad (including dynamic dry fruits, deity photo, energized Kalava, and sacred elements) is packed securely and dispatched via courier. It reaches your address within 7-10 working days of the puja date."
+              }
+            ].map((faq, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div key={index} className="border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
+                  <button
+                    onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                    className="w-full flex items-center justify-between p-5 text-left font-extrabold text-gray-955 hover:bg-gray-50 transition-colors focus:outline-none"
+                  >
+                    <span className="text-sm md:text-base">{faq.question}</span>
+                    {isOpen ? <FiChevronUp className="text-gray-500" /> : <FiChevronDown className="text-gray-500" />}
+                  </button>
+                  {isOpen && (
+                    <div className="p-5 pt-0 text-gray-500 text-sm leading-relaxed border-t border-gray-50 bg-[#FAFBFD]/50">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
