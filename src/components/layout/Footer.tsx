@@ -17,7 +17,7 @@ const footerLinks = {
   support: [
     { name: "Terms & Conditions", href: "/terms" },
     { name: "Privacy Policy", href: "/privacy" },
-    { name: "Refund Policy", href: "#" },
+    { name: "Refund Policy", href: "/refund" },
   ],
 };
 
@@ -94,15 +94,15 @@ export default function Footer() {
             <ul className="flex flex-col gap-4 text-[15px]">
               <li className="flex items-start gap-3 text-gray-400">
                 <FiMapPin className="text-[#F26622] shrink-0 mt-1" size={18} />
-                <span>108 Devotional Hub, Spiritual IT Park, New Delhi, 110001</span>
+                <span>SCO 35, Second Floor, Balaji Complex, Dhakoli, Zirakpur – 140603, Mohali, Punjab</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <FiPhone className="text-[#F26622] shrink-0" size={18} />
-                <span>+91 98765 43210</span>
+                <span>+91 7696705550</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <FiMail className="text-[#F26622] shrink-0" size={18} />
-                <span>support@merepanditji.com</span>
+                <span>info.merepanditji@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -111,7 +111,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="pt-8 border-t border-[#1E293B] flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>&copy; {new Date().getFullYear()} Mere Pandit Ji(Powered by Digital Disha Astro Spitiual LLP). All Rights Reserved</p>
+          <p>&copy; {new Date().getFullYear()} Mere Pandit Ji (Powered by Digital Disha Astro Spiritual LLP). All Rights Reserved</p>
           <div className="flex flex-wrap justify-center gap-6">
             {footerLinks.support.map((link) => (
               <Link key={link.name} href={link.href} className="hover:text-gray-300 transition-colors">
