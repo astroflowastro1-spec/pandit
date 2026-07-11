@@ -67,6 +67,9 @@ export default function CartClient() {
           name: booking.customerName,
           contact: booking.customerPhone,
         },
+        notes: {
+          gotra: booking.customerGotra,
+        },
         theme: {
           color: "#117B50",
         },
@@ -135,13 +138,17 @@ export default function CartClient() {
                 <span className="text-xl">👤</span> Devotee Details
               </h2>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div>
                   <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</p>
                   <p className="font-bold text-gray-900">{booking.customerName}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">WhatsApp Number</p>
+                  <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Gotra</p>
+                  <p className="font-bold text-gray-900">{booking.customerGotra || "Not specified"}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">WhatsApp</p>
                   <p className="font-bold text-gray-900 flex items-center gap-2">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-4 h-4" />
                     +91 {booking.customerPhone}

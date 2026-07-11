@@ -57,6 +57,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
   const [selectedPkg, setSelectedPkg] = useState<PackageType | null>(null);
   const [whatsappName, setWhatsappName] = useState("");
   const [whatsappPhone, setWhatsappPhone] = useState("");
+  const [whatsappGotra, setWhatsappGotra] = useState("");
   const [detailsError, setDetailsError] = useState("");
 
   useEffect(() => {
@@ -937,6 +938,20 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                   )}
                 </div>
 
+                <div>
+                  <h3 className="font-bold text-[#002D5B] text-sm mb-2">Enter Your Gotra (Optional)</h3>
+                  <div className="relative">
+                    <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400 z-10">Your Gotra</label>
+                    <input 
+                      type="text"
+                      value={whatsappGotra}
+                      onChange={(e) => setWhatsappGotra(e.target.value)}
+                      placeholder="e.g. Kashyap, Bharadwaj"
+                      className="w-full border border-gray-300 py-3 px-4 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm font-medium text-gray-900"
+                    />
+                  </div>
+                </div>
+
                 <button 
                   onClick={() => {
                     if (whatsappPhone.length < 10) {
@@ -958,6 +973,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                       currency: currencySymbol,
                       customerName: whatsappName,
                       customerPhone: whatsappPhone,
+                      customerGotra: whatsappGotra || "Not specified",
                     };
                     localStorage.setItem("pending_booking", JSON.stringify(bookingData));
                     router.push("/cart");
