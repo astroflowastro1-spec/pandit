@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@source "../components";
+@source "../context";
+@source "../lib";
 
 @theme inline {
   --color-brand-primary: #E67E22;
