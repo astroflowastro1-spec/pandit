@@ -7,6 +7,8 @@ import Image from "next/image";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
 
+import CountrySelector from "./CountrySelector";
+
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Puja", href: "/puja" },
@@ -45,7 +47,8 @@ export default function Header() {
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-4">
-          <div className="flex items-center gap-1 border border-gray-300 rounded-md px-3 py-1.5 cursor-pointer hover:bg-gray-50 transition-colors">
+          <CountrySelector />
+          <div className="flex items-center gap-1 border border-gray-300 rounded-lg px-3 py-1.5 cursor-pointer hover:bg-gray-50 transition-colors h-9">
             <span className="text-sm font-medium text-gray-700">English</span>
             <FiChevronDown className="text-gray-500" />
           </div>

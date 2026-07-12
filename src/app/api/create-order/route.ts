@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const options = {
       amount: Math.round(numericAmount * 100), // Amount in paise/cents
-      currency: currency === "$" ? "USD" : "INR",
+      currency: currency || "INR",
       receipt: `rcpt_${Date.now()}`,
     };
 
