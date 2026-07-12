@@ -72,16 +72,16 @@ export default function Reviews() {
           font-weight: bold;
         }
       `}</style>
-      
+
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         <div className="text-center mb-12 max-w-3xl mx-auto">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold text-[#0F172A] mb-4 font-serif"
           >
-            Reviews & Ratings
+            Previous Pooja
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

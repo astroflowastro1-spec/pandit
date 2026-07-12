@@ -3,17 +3,6 @@ import Image from "next/image";
 import { FiFacebook, FiTwitter, FiInstagram, FiYoutube, FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 
 const footerLinks = {
-  services: [
-    { name: "Book a Puja", href: "#" },
-    { name: "Offer Chadhava", href: "#" },
-    { name: "Astrology Services", href: "#" },
-    { name: "Hindu Literature", href: "#" },
-    { name: "Devotional Music", href: "#" },
-  ],
-  quickLinks: [
-    { name: "Terms & Conditions", href: "/terms" },
-    { name: "Privacy Policy", href: "/privacy" },
-  ],
   support: [
     { name: "Terms & Conditions", href: "/terms" },
     { name: "Privacy Policy", href: "/privacy" },
@@ -25,7 +14,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#0B1120] text-gray-300 pt-20 pb-10 border-t border-[#1E293B]">
       <div className="container mx-auto px-6 md:px-12 lg:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-8 mb-16">
           
           {/* Brand Col */}
           <div className="lg:col-span-2 pr-0 lg:pr-10">
@@ -57,35 +46,6 @@ export default function Footer() {
           </div>
 
           {/* Links Cols */}
-          <div>
-            <h4 className="text-white font-bold text-lg mb-6 relative inline-block after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-1 after:bg-[#F26622] after:rounded-full">
-              Our Services
-            </h4>
-            <ul className="flex flex-col gap-3.5 text-[15px]">
-              {footerLinks.services.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="hover:text-[#F26622] transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-white font-bold text-lg mb-6 relative inline-block after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-1 after:bg-[#F26622] after:rounded-full">
-              Quick Links
-            </h4>
-            <ul className="flex flex-col gap-3.5 text-[15px]">
-              {footerLinks.quickLinks.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="hover:text-[#F26622] transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
 
           <div>
             <h4 className="text-white font-bold text-lg mb-6 relative inline-block after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-1 after:bg-[#F26622] after:rounded-full">

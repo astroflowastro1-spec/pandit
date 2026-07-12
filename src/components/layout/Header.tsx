@@ -12,7 +12,7 @@ import CountrySelector from "./CountrySelector";
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Puja", href: "/puja" },
-  { name: "Chadhava", href: "#chadhava" },
+  { name: "Chadhava", href: "/chadhava" },
 ];
 
 export default function Header() {

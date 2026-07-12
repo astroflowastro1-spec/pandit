@@ -20,7 +20,7 @@ interface CountryContextType {
 const CountryContext = createContext<CountryContextType | undefined>(undefined);
 
 export function CountryProvider({ children }: { children: ReactNode }) {
-  const [countryCode, setCountryCodeState] = useState<string>("US");
+  const [countryCode, setCountryCodeState] = useState<string>("IN");
   const [hasSubmittedDetails, setHasSubmittedDetails] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [rates, setRates] = useState<Record<string, number> | null>(null);
@@ -60,11 +60,11 @@ export function CountryProvider({ children }: { children: ReactNode }) {
           if (data && data.country_code) {
             // Check if we support this country, otherwise fallback to US
             const exists = SUPPORTED_COUNTRIES.find(c => c.code === data.country_code);
-            setCountryCodeState(exists ? data.country_code : "US");
+            setCountryCodeState(exists ? data.country_code : "IN");
           }
         })
         .catch(err => {
-          setCountryCodeState("US");
+          setCountryCodeState("IN");
         })
         .finally(() => {
           setIsReady(true);

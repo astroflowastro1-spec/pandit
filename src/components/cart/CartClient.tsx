@@ -76,8 +76,24 @@ export default function CartClient() {
         theme: {
           color: "#117B50",
         },
-        handler: function (response: any) {
+        handler: async function (response: any) {
           // Payment Success
+          try {
+            await fetch("/api/save-booking", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                paymentId: response.razorpay_payment_id,
+                orderId: response.razorpay_order_id,
+                ...booking,
+                totalPaid: totalAmount,
+                date: new Date().toISOString()
+              })
+            });
+          } catch (e) {
+            console.error("Failed to save to sheet", e);
+          }
+
           localStorage.removeItem("pending_booking");
           router.push("/success");
         },
