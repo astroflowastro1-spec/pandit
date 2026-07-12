@@ -41,11 +41,13 @@ export function CountryProvider({ children }: { children: ReactNode }) {
           if (data && data.country_code) {
             const detected = data.country_code === 'IN' ? 'india' : 'other';
             setDetectedCountry(detected);
+            setCountryState(detected);
           }
         })
         .catch(err => {
           // Gracefully handle ad-blockers or network errors without spamming console
           setDetectedCountry('india'); // Fallback to India if failed
+          setCountryState('india');
         })
         .finally(() => {
           setIsReady(true);
