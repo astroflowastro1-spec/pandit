@@ -39,11 +39,14 @@ export default function CartClient() {
     }
 
     try {
+      const gstAmount = Math.round(booking.packagePrice * 0.18);
+      const totalAmount = booking.packagePrice + gstAmount;
+
       const response = await fetch("/api/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: booking.packagePrice,
+          amount: totalAmount,
           currency: booking.currency,
         }),
       });
@@ -91,6 +94,9 @@ export default function CartClient() {
   };
 
   if (!booking) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div></div>;
+
+  const gstAmount = Math.round(booking.packagePrice * 0.18);
+  const totalAmount = booking.packagePrice + gstAmount;
 
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-12">
@@ -173,16 +179,16 @@ export default function CartClient() {
                   <span className="font-black text-gray-900 text-lg whitespace-nowrap">{booking.currency}{booking.packagePrice}</span>
                 </div>
                 
-                <div className="flex justify-between text-emerald-600 font-bold bg-emerald-50 p-3 rounded-xl">
-                  <span>Taxes & Fees</span>
-                  <span>Included</span>
+                <div className="flex justify-between text-gray-600 font-bold bg-gray-50 p-3 rounded-xl">
+                  <span>Taxes & Fees (18% GST)</span>
+                  <span>+ {booking.currency}{gstAmount}</span>
                 </div>
               </div>
 
               <div className="border-t-2 border-dashed border-gray-200 pt-4 mb-6">
                 <div className="flex justify-between items-end">
                   <span className="font-bold text-gray-500 text-sm mb-1">Total Amount</span>
-                  <span className="font-black text-3xl text-[#F26622] leading-none">{booking.currency}{booking.packagePrice}</span>
+                  <span className="font-black text-3xl text-[#F26622] leading-none">{booking.currency}{totalAmount}</span>
                 </div>
               </div>
 
