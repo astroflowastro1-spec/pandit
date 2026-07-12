@@ -162,7 +162,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
     }
     
     // Default fallback packages if not provided by database
-    return [
+    const fallbackIndia = [
       {
         id: "individual",
         title: "Individual Puja",
@@ -206,6 +206,53 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
         tagColor: "bg-emerald-600"
       }
     ];
+
+    const fallbackNri = [
+      {
+        id: "individual",
+        title: "Individual Puja",
+        price: 21,
+        originalPrice: 41,
+        description: "Puja will be performed with your Name and Gotra. Video recording of Sankalp & Havan will be shared.",
+        features: [
+          "Sankalp with 1 Name & Gotra",
+          "Puja Video Clip via WhatsApp",
+          "Dry Fruits Prasad (100g) + Deity Photo"
+        ],
+        tag: "Popular",
+        tagColor: "bg-blue-600"
+      },
+      {
+        id: "family",
+        title: "Family Puja (Up to 4 Members)",
+        price: 31,
+        originalPrice: 61,
+        description: "Puja performed for the entire family. Detailed Sankalp with all names. Premium Aashirwad Box sent to your home.",
+        features: [
+          "Sankalp with up to 4 Names & Gotras",
+          "Full Puja Video Clip via WhatsApp",
+          "Aashirwad Box (Prasad, Kalava, Sindoor, Deity Photo)"
+        ],
+        tag: "Best Value",
+        tagColor: "bg-[#FF7F3F]"
+      },
+      {
+        id: "havan",
+        title: "Special Maha Havan (Joint)",
+        price: 51,
+        originalPrice: 101,
+        description: "Special Havan performed for health, wealth & protection from evil eye. Ultimate Aashirwad Box + energized Yantra.",
+        features: [
+          "Maha Sankalp with Family Names & Gotras",
+          "Detailed Video & Live Sankalp Photo",
+          "Maha Prasad Box (Prasad, Energized Yantra, Kalava, Janeu, Diya)"
+        ],
+        tag: "Recommended",
+        tagColor: "bg-emerald-600"
+      }
+    ];
+
+    return activePricingTab === "india" ? fallbackIndia : fallbackNri;
   };
 
   const currentPackages = getPackagesList();
