@@ -882,6 +882,29 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                   ))}
                 </div>
               </div>
+              
+              {/* Sticky Footer inside Modal */}
+              {totalItems > 0 && (
+                <div className="p-4 bg-white border-t border-gray-100 mt-auto sticky bottom-0 z-10 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+                  <button 
+                    onClick={() => {
+                      setIsPackagePopupOpen(false);
+                      setIsDetailsPopupOpen(true);
+                    }}
+                    className="w-full bg-[#117B50] hover:bg-[#0D6240] text-white text-[15px] font-bold py-3.5 px-5 rounded-xl flex items-center justify-between transition-all shadow-[0_4px_15px_rgba(17,123,80,0.2)]"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span>{totalItems} Offerings</span>
+                      <span>•</span>
+                      <span>{formatPrice(totalPrice)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>Continue</span>
+                      <span>→</span>
+                    </div>
+                  </button>
+                </div>
+              )}
             </motion.div>
           </div>
         )}
@@ -1028,7 +1051,7 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
       </AnimatePresence>
       
       {/* Sticky Bottom Cart Bar */}
-      {totalItems > 0 && (
+      {totalItems > 0 && !isPackagePopupOpen && !isDetailsPopupOpen && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-[999]">
           <div className="max-w-5xl mx-auto flex items-center justify-between">
             <button 
