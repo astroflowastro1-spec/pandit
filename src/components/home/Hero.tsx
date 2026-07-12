@@ -9,6 +9,7 @@ const slides = [
   {
     id: 1,
     imageSrc: "/desktopbanner.jpeg",
+    mobileImageSrc: "/mobilebanner.jpeg",
     title1: "Mere Pandit Ji Special ",
     title2: "Puja",
     title2Color: "text-[#FFB800]",
@@ -18,6 +19,7 @@ const slides = [
   {
     id: 2,
     imageSrc: "/desktopbanner2.jpeg",
+    mobileImageSrc: "/mobilebanner2.jpeg",
     title1: "Mere Pandit Ji Special ",
     title2: "Chadhava",
     title2Color: "text-[#FFB800]",
@@ -27,6 +29,7 @@ const slides = [
   {
     id: 3,
     imageSrc: "/desktopbanner3.jpeg",
+    mobileImageSrc: "/mobilebanner3.jpeg",
     title1: "Mere Pandit Ji Special ",
     title2: "Astrology",
     title2Color: "text-[#FFB800]",
@@ -63,12 +66,21 @@ export default function Hero() {
       >
         {slides.map((slide, index) => (
           <div key={slide.id} className="relative w-full h-full flex-shrink-0">
-            {/* Background Image */}
+            {/* Desktop Background Image */}
             <Image 
               src={slide.imageSrc} 
               alt={`Banner ${index + 1}`} 
               fill
-              className="object-cover object-center"
+              className="object-cover object-center hidden md:block"
+              priority={index === 0}
+            />
+
+            {/* Mobile Background Image */}
+            <Image 
+              src={slide.mobileImageSrc} 
+              alt={`Banner ${index + 1} Mobile`} 
+              fill
+              className="object-cover object-center block md:hidden"
               priority={index === 0}
             />
             
