@@ -33,16 +33,19 @@ export function CountryProvider({ children }: { children: ReactNode }) {
     } else {
       // Auto-detect based on IP just to pre-fill or suggest
       fetch('https://ipapi.co/json/')
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error('Rate limited or blocked');
+          return res.json();
+        })
         .then(data => {
           if (data && data.country_code) {
             const detected = data.country_code === 'IN' ? 'india' : 'other';
             setDetectedCountry(detected);
-            // We do NOT setCountryState here because we want them to fill the form first
           }
         })
         .catch(err => {
-          console.error('Error fetching location:', err);
+          // Gracefully handle ad-blockers or network errors without spamming console
+          setDetectedCountry('india'); // Fallback to India if failed
         })
         .finally(() => {
           setIsReady(true);
