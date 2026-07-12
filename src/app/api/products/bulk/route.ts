@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     const text = await file.text();
-    const records = parse(text, {
+    const records: any[] = parse(text, {
       columns: true,
       skip_empty_lines: true
     });

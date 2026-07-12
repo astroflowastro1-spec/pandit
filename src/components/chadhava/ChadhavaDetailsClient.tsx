@@ -20,6 +20,7 @@ interface PackageType {
   tagColor?: string;
   priceConverted?: number;
   originalPriceConverted?: number;
+  imageSrc?: string;
 }
 
 interface ChadhavaDetailsClientProps {

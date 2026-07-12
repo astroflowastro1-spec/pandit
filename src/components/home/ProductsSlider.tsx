@@ -58,9 +58,9 @@ export default function ProductsSlider() {
           className="pb-16 px-4 !py-4"
         >
           {products.map((product) => {
-            const price = isReady ? convertPrice(product.priceInr, product.priceUsd) : product.priceInr;
+            const price = isReady ? convertPrice(product.priceUsd) : product.priceInr;
             const originalPrice = isReady 
-              ? (product.originalPriceInr && product.originalPriceUsd ? convertPrice(product.originalPriceInr, product.originalPriceUsd) : null)
+              ? (product.originalPriceUsd ? convertPrice(product.originalPriceUsd) : null)
               : product.originalPriceInr;
               
             const formattedPrice = isReady ? formatPrice(price) : `₹${price}`;
