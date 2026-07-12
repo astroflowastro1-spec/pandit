@@ -47,12 +47,11 @@ export default function Header() {
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-4">
-          <CountrySelector />
           <div className="flex items-center gap-1 border border-gray-300 rounded-lg px-3 py-1.5 cursor-pointer hover:bg-gray-50 transition-colors h-9">
             <span className="text-sm font-medium text-gray-700">English</span>
             <FiChevronDown className="text-gray-500" />
           </div>
-          
+
           <button className="w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center text-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
             <FiUser size={18} className="text-gray-400" />
           </button>
