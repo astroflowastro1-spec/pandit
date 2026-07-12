@@ -23,7 +23,7 @@ export default async function PujaDetailsPage({ params }: { params: Promise<{ sl
   const { slug } = await params;
   
   // Fetch raw puja from DB
-  const rawPuja = await Puja.findOne({ slug });
+  const rawPuja = await Puja.findOne({ slug }).lean();
 
   if (!rawPuja) {
     notFound();
@@ -47,7 +47,7 @@ export default async function PujaDetailsPage({ params }: { params: Promise<{ sl
     templeImageSrc: rawPuja.templeImageSrc || "",
     benefits: rawPuja.benefits || [],
     inclusions: rawPuja.inclusions || [],
-    packages: rawPuja.packages || null,
+    packages: rawPuja.packages ? JSON.parse(JSON.stringify(rawPuja.packages)) : null,
     badge: rawPuja.badge || "",
     badgeColor: rawPuja.badgeColor || "bg-[#F3912E]",
   };

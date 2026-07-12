@@ -12,6 +12,11 @@ async function check() {
     console.log("PUJAS IN DB:");
     pujas.forEach(p => {
       console.log(`- Title: ${p.title} | Slug: ${p.slug}`);
+      if (p.packages) {
+         console.log(`  Packages: India Ind: ${p.packages.india?.[0]?.price} | NRI Ind: ${p.packages.nri?.[0]?.price}`);
+      } else {
+         console.log(`  No packages found!`);
+      }
     });
   } catch (err) {
     console.error(err);
