@@ -36,16 +36,16 @@ export default function PujaBanner() {
               bulletActiveClass: "swiper-pagination-bullet-active !bg-white !w-2.5 !h-2.5",
               bulletClass: "swiper-pagination-bullet !bg-white/60 !opacity-100 !w-2 !h-2 !mx-1.5 transition-all",
             }}
-            className="w-full aspect-[16/9] md:aspect-[3/1] lg:aspect-[3.5/1]"
+            className="w-full aspect-[2.5/1] md:aspect-[3.5/1]"
           >
             {banners.map((src, index) => (
               <SwiperSlide key={index}>
-                <div className="w-full h-full relative">
+                <div className="w-full h-full relative bg-[#0a0a0a]">
                   <Image
                     src={src}
                     alt={`Puja Banner ${index + 1}`}
                     fill
-                    className="object-cover object-center"
+                    className="object-contain object-center"
                     priority={index === 0}
                   />
                 </div>
