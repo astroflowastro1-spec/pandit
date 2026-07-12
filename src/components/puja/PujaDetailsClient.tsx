@@ -253,12 +253,12 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
             <div className="bg-white rounded-3xl overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.05)] border border-gray-100 p-0">
               
               {/* Image Section */}
-              <div className="relative w-full h-[350px] md:h-[480px] overflow-hidden group">
+              <div className="relative w-full aspect-[4/3] sm:aspect-video md:aspect-auto md:h-[480px] overflow-hidden group">
                 <Image 
                   src={sliderImages[currentSlide]} 
                   alt={puja.title} 
                   fill
-                  className="object-cover object-center transition-opacity duration-500"
+                  className="object-cover object-left md:object-center transition-opacity duration-500"
                   priority
                 />
                 
