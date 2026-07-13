@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
@@ -137,25 +136,7 @@ export default function ReviewsSlider() {
                     ></iframe>
                   </div>
 
-                  {/* User Info */}
-                  <div className="flex items-center gap-3 px-1 mt-2">
-                    <div className="w-11 h-11 rounded-full overflow-hidden relative flex-shrink-0 shadow-sm border border-gray-200">
-                      <Image 
-                        src={review.avatar} 
-                        alt={review.name} 
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 text-[15px] leading-tight">
-                        {review.name}
-                      </h4>
-                      <p className="text-gray-500 text-xs mt-0.5">
-                        {review.location}
-                      </p>
-                    </div>
-                  </div>
+
 
                 </div>
               </SwiperSlide>
