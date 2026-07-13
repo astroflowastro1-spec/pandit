@@ -249,17 +249,23 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
 
   // Determine current packages based on selected tab or defaults
   const getPackagesList = (): PackageType[] => {
-    let sourcePackages = [];
+    // Use activePricingTab to select the correct package set
+    const isIndia = activePricingTab === "india";
+    let sourcePackages: any[] = [];
     if (puja.packages) {
-      sourcePackages = countryData.code === "IN" ? puja.packages.india : puja.packages.nri;
+      sourcePackages = isIndia ? puja.packages.india : puja.packages.nri;
     } else {
-      sourcePackages = countryData.code === "IN" ? fallbackIndia : fallbackNri;
+      sourcePackages = isIndia ? fallbackIndia : fallbackNri;
     }
 
     return sourcePackages.map((pkg: any) => ({
       ...pkg,
-      priceConverted: countryData.code === "IN" ? pkg.price : convertPrice(pkg.price),
-      originalPriceConverted: pkg.originalPrice ? (countryData.code === "IN" ? pkg.originalPrice : convertPrice(pkg.originalPrice)) : undefined,
+      // India packages: prices are in INR — no conversion needed
+      // NRI packages: prices are in USD — convert to user's selected currency
+      priceConverted: isIndia ? pkg.price : convertPrice(pkg.price),
+      originalPriceConverted: pkg.originalPrice
+        ? (isIndia ? pkg.originalPrice : convertPrice(pkg.originalPrice))
+        : undefined,
     }));
   };
 

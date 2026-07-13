@@ -110,26 +110,15 @@ export default function Reviews() {
           >
             {videoReviews.map((review, index) => (
               <SwiperSlide key={index} className="h-auto group">
-                <div className="flex flex-col gap-5">
-                  <div className="rounded-2xl overflow-hidden shadow-md aspect-video bg-gray-100 relative transition-transform duration-300 group-hover:-translate-y-1">
-                    <iframe
-                      className="w-full h-full absolute inset-0"
-                      src={`https://www.youtube.com/embed/${review.videoId}?rel=0`}
-                      title={`Video Testimonial by ${review.name}`}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                  <div className="flex items-center gap-4 px-2">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0F172A] to-[#1E293B] flex items-center justify-center text-white font-serif font-bold text-lg shadow-sm flex-shrink-0">
-                      {review.initials}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[#0F172A] text-base leading-tight">{review.name}</h4>
-                      <p className="text-sm text-gray-500 mt-0.5">{review.location}</p>
-                    </div>
-                  </div>
+                <div className="rounded-2xl overflow-hidden shadow-md aspect-video bg-gray-100 relative transition-transform duration-300 group-hover:-translate-y-1">
+                  <iframe
+                    className="w-full h-full absolute inset-0"
+                    src={`https://www.youtube.com/embed/${review.videoId}?rel=0`}
+                    title={`Video Testimonial by ${review.name}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
                 </div>
               </SwiperSlide>
             ))}
