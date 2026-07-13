@@ -23,6 +23,11 @@ body {
   overflow-x: hidden;
 }
 
+body.preloader-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
 @keyframes gradient-text {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }

@@ -45,7 +45,67 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="antialiased min-h-screen flex flex-col relative selection:bg-brand-primary selection:text-white">
+      <body className="antialiased min-h-screen flex flex-col relative selection:bg-brand-primary selection:text-white preloader-active">
+        {/* Fullscreen Video Preloader */}
+        <div id="global-preloader" style={{
+          position: 'fixed',
+          inset: '0',
+          zIndex: 9999,
+          backgroundColor: '#000',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'opacity 0.7s ease',
+        }}>
+          <video
+            id="preloader-video"
+            src="/loding video.mp4"
+            autoPlay
+            muted
+            playsInline
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+
+        {/* Inline script: fade out when video ends, 8s safety fallback */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function fadeOutLoader() {
+                  var loader = document.getElementById('global-preloader');
+                  if (!loader) return;
+                  loader.style.opacity = '0';
+                  document.body.classList.remove('preloader-active');
+                  setTimeout(function() {
+                    loader.style.display = 'none';
+                  }, 750);
+                }
+                var vid = document.getElementById('preloader-video');
+                var safeTimer = setTimeout(fadeOutLoader, 8000);
+                if (vid) {
+                  vid.addEventListener('ended', function() {
+                    clearTimeout(safeTimer);
+                    fadeOutLoader();
+                  });
+                  vid.play().catch(function() {
+                    // Autoplay blocked — dismiss immediately
+                    clearTimeout(safeTimer);
+                    fadeOutLoader();
+                  });
+                } else {
+                  clearTimeout(safeTimer);
+                  fadeOutLoader();
+                }
+              })();
+            `,
+          }}
+        />
+
         <noscript>
           <img
             height="1"
