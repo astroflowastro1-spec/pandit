@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FiCheck, FiShield, FiLock, FiChevronLeft } from "react-icons/fi";
+import { useCountry } from "@/context/CountryContext";
 
 export default function CartClient() {
   const router = useRouter();
+  const { countryData, formatPrice } = useCountry();
   const [booking, setBooking] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -72,6 +74,9 @@ export default function CartClient() {
         },
         notes: {
           gotra: booking.customerGotra,
+          member2Name: booking.member2Name || "",
+          member3Name: booking.member3Name || "",
+          member4Name: booking.member4Name || "",
         },
         theme: {
           color: "#117B50",
@@ -162,8 +167,13 @@ export default function CartClient() {
               
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div>
-                  <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</p>
+                  <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">
+                    {booking.member2Name ? "Devotee Names" : "Full Name"}
+                  </p>
                   <p className="font-bold text-gray-900">{booking.customerName}</p>
+                  {booking.member2Name && <p className="font-bold text-gray-900">{booking.member2Name}</p>}
+                  {booking.member3Name && <p className="font-bold text-gray-900">{booking.member3Name}</p>}
+                  {booking.member4Name && <p className="font-bold text-gray-900">{booking.member4Name}</p>}
                 </div>
                 <div>
                   <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Gotra</p>
@@ -192,19 +202,19 @@ export default function CartClient() {
                     <span className="font-bold text-gray-900 block">{booking.packageTitle}</span>
                     <span className="text-xs font-medium text-gray-500">Selected Package</span>
                   </div>
-                  <span className="font-black text-gray-900 text-lg whitespace-nowrap">{booking.currency}{booking.packagePrice}</span>
+                  <span className="font-black text-gray-900 text-lg whitespace-nowrap">{formatPrice(booking.packagePrice)}</span>
                 </div>
                 
                 <div className="flex justify-between text-gray-600 font-bold bg-gray-50 p-3 rounded-xl">
                   <span>Taxes & Fees (18% GST)</span>
-                  <span>+ {booking.currency}{gstAmount}</span>
+                  <span>+ {formatPrice(gstAmount)}</span>
                 </div>
               </div>
 
               <div className="border-t-2 border-dashed border-gray-200 pt-4 mb-6">
                 <div className="flex justify-between items-end">
                   <span className="font-bold text-gray-500 text-sm mb-1">Total Amount</span>
-                  <span className="font-black text-3xl text-[#F26622] leading-none">{booking.currency}{totalAmount}</span>
+                  <span className="font-black text-3xl text-[#F26622] leading-none">{formatPrice(totalAmount)}</span>
                 </div>
               </div>
 

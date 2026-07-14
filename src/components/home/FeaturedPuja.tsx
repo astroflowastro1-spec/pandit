@@ -40,7 +40,7 @@ const pujas = [
 ];
 
 export default function FeaturedPuja() {
-  const { country, currencySymbol } = useCountry();
+  const { country, convertPrice, formatPrice } = useCountry();
   return (
     <section className="py-24 bg-bg-base relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMiIgZmlsbD0iI0U2N0UyMiIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3N2Zz4=')] opacity-50" />
@@ -131,7 +131,9 @@ export default function FeaturedPuja() {
                     <div className="text-right">
                       <p className="text-xs text-gray-500 font-medium">Starting from</p>
                       <p className="font-serif font-bold text-xl text-brand-primary">
-                        {currencySymbol}{country === "india" ? puja.priceInr : (country === "other" ? puja.priceUsd : puja.priceInr)}
+                        {country === "india"
+                          ? `₹${puja.priceInr}`
+                          : formatPrice(convertPrice(parseFloat(puja.priceUsd)))}
                       </p>
                     </div>
                   </div>

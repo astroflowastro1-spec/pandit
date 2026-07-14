@@ -99,8 +99,7 @@ const fallbackNri = [
   {
     id: "individual",
     title: "Individual Chadhava",
-    price: 21,
-    originalPrice: 41,
+    price: 501,
     description: "Chadhava will be performed with your Name and Gotra. Video recording of Sankalp & Havan will be shared.",
     features: [
       "Sankalp with 1 Name & Gotra",
@@ -113,8 +112,7 @@ const fallbackNri = [
   {
     id: "family",
     title: "Family Chadhava (Up to 4 Members)",
-    price: 31,
-    originalPrice: 61,
+    price: 1100,
     description: "Chadhava performed for the entire family. Detailed Sankalp with all names. Premium Aashirwad Box sent to your home.",
     features: [
       "Sankalp with up to 4 Names & Gotras",
@@ -127,8 +125,7 @@ const fallbackNri = [
   {
     id: "havan",
     title: "Special Maha Havan (Joint)",
-    price: 51,
-    originalPrice: 101,
+    price: 2100,
     description: "Special Havan performed for health, wealth & protection from evil eye. Ultimate Aashirwad Box + energized Yantra.",
     features: [
       "Maha Sankalp with Family Names & Gotras",
@@ -142,7 +139,7 @@ const fallbackNri = [
 
 export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClientProps) {
   const router = useRouter();
-  const { countryData, convertPrice, formatPrice, country, currencySymbol } = useCountry();
+  const { countryData, convertFromINR, formatPrice, country, currencySymbol } = useCountry();
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [activePricingTab, setActivePricingTab] = useState<"india" | "nri">("india");
   const [isPackagePopupOpen, setIsPackagePopupOpen] = useState(false);
@@ -152,7 +149,18 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
   const [whatsappName, setWhatsappName] = useState("");
   const [whatsappPhone, setWhatsappPhone] = useState("");
   const [whatsappGotra, setWhatsappGotra] = useState("");
+  const [member2Name, setMember2Name] = useState("");
+  const [member3Name, setMember3Name] = useState("");
+  const [member4Name, setMember4Name] = useState("");
   const [detailsError, setDetailsError] = useState("");
+
+  useEffect(() => {
+    if (!isDetailsPopupOpen) {
+      setMember2Name("");
+      setMember3Name("");
+      setMember4Name("");
+    }
+  }, [isDetailsPopupOpen]);
 
   useEffect(() => {
     if (country) {
@@ -249,23 +257,27 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
     packagesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Determine current packages based on selected tab or defaults
+  // India → use india packages (INR, no conversion)
+  // Abroad → use nri packages (also stored in INR), convert to local currency
   const getPackagesList = (): PackageType[] => {
-    let sourcePackages = [];
-    if (Chadhava.packages) {
-      sourcePackages = countryData.code === "IN" ? Chadhava.packages.india : Chadhava.packages.nri;
-    } else {
-      sourcePackages = countryData.code === "IN" ? fallbackIndia : fallbackNri;
-    }
+    const isIndia = countryData.code === 'IN';
+    const sourcePackages: any[] = Chadhava.packages
+      ? (isIndia ? Chadhava.packages.india : Chadhava.packages.nri)
+      : (isIndia ? fallbackIndia : fallbackNri);
 
     return sourcePackages.map((pkg: any) => ({
       ...pkg,
-      priceConverted: countryData.code === "IN" ? pkg.price : convertPrice(pkg.price),
-      originalPriceConverted: pkg.originalPrice ? (countryData.code === "IN" ? pkg.originalPrice : convertPrice(pkg.originalPrice)) : undefined,
+      // convertFromINR handles INR→INR (no-op) and INR→foreign currency
+      priceConverted: convertFromINR(pkg.price),
+      originalPriceConverted: pkg.originalPrice ? convertFromINR(pkg.originalPrice) : undefined,
     }));
   };
 
   const currentPackages = getPackagesList();
+
+  const selectedPackagesInCart = currentPackages.filter(pkg => cartItems[pkg.id] > 0);
+  const isCouple = selectedPackagesInCart.some(pkg => pkg.id === 'couple' || pkg.title?.toLowerCase().includes('couple'));
+  const isFamily = selectedPackagesInCart.some(pkg => pkg.id === 'family' || pkg.id === 'havan' || pkg.title?.toLowerCase().includes('family') || pkg.title?.toLowerCase().includes('havan'));
 
   const totalItems = Object.values(cartItems).reduce((a, b) => a + b, 0);
   const totalPrice = currentPackages.reduce((acc, pkg) => acc + (pkg.priceConverted || pkg.price) * (cartItems[pkg.id] || 0), 0);
@@ -924,7 +936,7 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+              className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]"
             >
               {/* Header */}
               <div className="bg-white border-b border-gray-100 p-4 flex items-center gap-3">
@@ -941,7 +953,7 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
               </div>
 
               {/* Form Content */}
-              <div className="p-5 space-y-5">
+              <div className="p-5 space-y-5 overflow-y-auto flex-1">
                 <div>
                   <h3 className="font-bold text-[#002D5B] text-sm mb-1.5">Enter Your Whatsapp Mobile Number</h3>
                   <p className="text-xs text-gray-500 mb-3 leading-relaxed">
@@ -972,9 +984,13 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-[#002D5B] text-sm mb-2">Enter Your Name</h3>
+                  <h3 className="font-bold text-[#002D5B] text-sm mb-2">
+                    {isCouple || isFamily ? "Enter Member 1 Name" : "Enter Your Name"}
+                  </h3>
                   <div className="relative">
-                    <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400 z-10">Your full Name</label>
+                    <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400 z-10">
+                      {isCouple || isFamily ? "Member 1 full Name" : "Your full Name"}
+                    </label>
                     <input 
                       type="text"
                       value={whatsappName}
@@ -989,6 +1005,57 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                     <p className="text-red-500 text-xs mt-1.5 font-medium">{detailsError}</p>
                   )}
                 </div>
+
+                {(isCouple || isFamily) && (
+                  <div>
+                    <h3 className="font-bold text-[#002D5B] text-sm mb-2">Enter Member 2 Name</h3>
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400 z-10">Member 2 full Name</label>
+                      <input 
+                        type="text"
+                        value={member2Name}
+                        onChange={(e) => {
+                          setMember2Name(e.target.value);
+                          setDetailsError("");
+                        }}
+                        className="w-full border border-gray-300 py-3 px-4 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm font-medium text-gray-900"
+                      />
+                    </div>
+                    {detailsError && detailsError.includes("Member 2") && (
+                      <p className="text-red-500 text-xs mt-1.5 font-medium">{detailsError}</p>
+                    )}
+                  </div>
+                )}
+
+                {isFamily && (
+                  <>
+                    <div>
+                      <h3 className="font-bold text-[#002D5B] text-sm mb-2">Enter Member 3 Name (Optional)</h3>
+                      <div className="relative">
+                        <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400 z-10">Member 3 full Name</label>
+                        <input 
+                          type="text"
+                          value={member3Name}
+                          onChange={(e) => setMember3Name(e.target.value)}
+                          className="w-full border border-gray-300 py-3 px-4 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm font-medium text-gray-900"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-bold text-[#002D5B] text-sm mb-2">Enter Member 4 Name (Optional)</h3>
+                      <div className="relative">
+                        <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400 z-10">Member 4 full Name</label>
+                        <input 
+                          type="text"
+                          value={member4Name}
+                          onChange={(e) => setMember4Name(e.target.value)}
+                          className="w-full border border-gray-300 py-3 px-4 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm font-medium text-gray-900"
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <div>
                   <h3 className="font-bold text-[#002D5B] text-sm mb-2">Enter Your Gotra (Optional)</h3>
@@ -1014,6 +1081,10 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                       setDetailsError("Please enter valid name");
                       return;
                     }
+                    if ((isCouple || isFamily) && !member2Name.trim()) {
+                      setDetailsError("Please enter Member 2 Name");
+                      return;
+                    }
                     // Handle Next Step
                       const packageTitles = currentPackages
                         .filter(pkg => cartItems[pkg.id] > 0)
@@ -1032,12 +1103,17 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                         customerName: whatsappName,
                         customerPhone: whatsappPhone,
                         customerGotra: whatsappGotra || "Not specified",
+                        member2Name: (isCouple || isFamily) ? member2Name.trim() : undefined,
+                        member3Name: isFamily && member3Name.trim() ? member3Name.trim() : undefined,
+                        member4Name: isFamily && member4Name.trim() ? member4Name.trim() : undefined,
                       };
                     localStorage.setItem("pending_booking", JSON.stringify(bookingData));
                     router.push("/cart");
                   }}
                   className={`w-full py-3.5 rounded-lg font-bold text-[15px] transition-all ${
-                    whatsappPhone.length >= 10 && whatsappName.length > 0
+                    whatsappPhone.length >= 10 && 
+                    whatsappName.trim().length > 0 &&
+                    ((!(isCouple || isFamily)) || member2Name.trim().length > 0)
                       ? "bg-[#8A9FB4] text-white hover:bg-[#728599]"
                       : "bg-[#A8B7C7] text-white/90 cursor-not-allowed"
                   }`}

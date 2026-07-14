@@ -50,6 +50,8 @@ export async function GET() {
       KWD: 0.31,
       OMR: 0.38,
       THB: 36.5,
+      NZD: 1.63,
+      MYR: 4.70,
     };
     
     return NextResponse.json({ 

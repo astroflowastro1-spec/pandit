@@ -11,6 +11,7 @@ interface CountryContextType {
   submitDetails: (name: string, phone: string) => void;
   rates: Record<string, number> | null;
   convertPrice: (baseUsdPrice: number) => number;
+  convertFromINR: (inrPrice: number) => number; // Convert INR base price → selected currency
   formatPrice: (price: number) => string;
   // Legacy aliases for components that haven't been refactored yet
   country: "india" | "other" | null; 
@@ -93,12 +94,26 @@ export function CountryProvider({ children }: { children: ReactNode }) {
     return baseUsdPrice * rates[countryData.currencyCode];
   }, [rates, countryData]);
 
+  // Convert an INR price to the currently selected currency
+  // Formula: inrPrice / INR_rate * target_rate (all rates are USD-based)
+  const convertFromINR = useCallback((inrPrice: number) => {
+    if (countryData.currencyCode === 'INR') return inrPrice;
+    const inrRate = rates?.['INR'] ?? 83.5;
+    const targetRate = rates?.[countryData.currencyCode] ?? 1;
+    return (inrPrice / inrRate) * targetRate;
+  }, [rates, countryData]);
+
   const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency: countryData.currencyCode,
-      maximumFractionDigits: 0,
-    }).format(price);
+    try {
+      return new Intl.NumberFormat('en', {
+        style: 'currency',
+        currency: countryData.currencyCode,
+        maximumFractionDigits: 0,
+      }).format(price);
+    } catch {
+      // Fallback if currency code is not supported by Intl
+      return `${countryData.currencySymbol}${Math.round(price).toLocaleString('en')}`;
+    }
   }, [countryData]);
 
   // Legacy mappings for older components
@@ -113,6 +128,7 @@ export function CountryProvider({ children }: { children: ReactNode }) {
       submitDetails,
       rates,
       convertPrice,
+      convertFromINR,
       formatPrice,
       country: legacyCountry,
       currencySymbol: countryData.currencySymbol

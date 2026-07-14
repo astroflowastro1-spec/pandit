@@ -17,14 +17,15 @@ export const SUPPORTED_COUNTRIES: CountryData[] = [
   { code: 'SA', name: 'Saudi Arabia', currencyCode: 'SAR', currencySymbol: 'SAR', flag: '🇸🇦' },
   { code: 'QA', name: 'Qatar', currencyCode: 'QAR', currencySymbol: 'QAR', flag: '🇶🇦' },
   { code: 'BH', name: 'Bahrain', currencyCode: 'BHD', currencySymbol: 'BHD', flag: '🇧🇭' },
-  { code: 'IR', name: 'Iran', currencyCode: 'IRR', currencySymbol: 'IRR', flag: '🇮🇷' },
-  { code: 'IQ', name: 'Iraq', currencyCode: 'IQD', currencySymbol: 'IQD', flag: '🇮🇶' },
   { code: 'KW', name: 'Kuwait', currencyCode: 'KWD', currencySymbol: 'KWD', flag: '🇰🇼' },
   { code: 'OM', name: 'Oman', currencyCode: 'OMR', currencySymbol: 'OMR', flag: '🇴🇲' },
   { code: 'TH', name: 'Thailand', currencyCode: 'THB', currencySymbol: '฿', flag: '🇹🇭' },
   { code: 'DE', name: 'Germany', currencyCode: 'EUR', currencySymbol: '€', flag: '🇩🇪' },
   { code: 'FR', name: 'France', currencyCode: 'EUR', currencySymbol: '€', flag: '🇫🇷' },
   { code: 'IT', name: 'Italy', currencyCode: 'EUR', currencySymbol: '€', flag: '🇮🇹' },
+  { code: 'NZ', name: 'New Zealand', currencyCode: 'NZD', currencySymbol: 'NZ$', flag: '🇳🇿' },
+  { code: 'MY', name: 'Malaysia', currencyCode: 'MYR', currencySymbol: 'RM', flag: '🇲🇾' },
+  { code: 'NL', name: 'Netherlands', currencyCode: 'EUR', currencySymbol: '€', flag: '🇳🇱' },
 ];
 
 export const getCountryByCode = (code: string): CountryData => {

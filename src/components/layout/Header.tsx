@@ -47,7 +47,7 @@ export default function Header() {
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-4">
-
+          <CountrySelector />
           <button className="w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center text-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
             <FiUser size={18} className="text-gray-400" />
           </button>
@@ -92,6 +92,11 @@ export default function Header() {
                 {link.name}
               </Link>
             ))}
+            {/* Country Selector in Mobile Menu */}
+            <div className="px-2 pt-2 border-t border-gray-100">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Currency</p>
+              <CountrySelector />
+            </div>
           </div>
         </div>
       )}
