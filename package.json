@@ -12,6 +12,10 @@
     "@hello-pangea/dnd": "^18.0.1",
     "@studio-freight/lenis": "^1.0.42",
     "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "axios": "^1.18.1",
     "clsx": "^2.1.1",
     "csv-parse": "^7.0.1",
     "framer-motion": "^12.42.2",
@@ -26,9 +30,6 @@
     "swiper": "^14.0.2",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
     "typescript": "^5"
   },
   "devDependencies": {

@@ -90,6 +90,7 @@ export default function CartClient() {
               body: JSON.stringify({
                 paymentId: response.razorpay_payment_id,
                 orderId: response.razorpay_order_id,
+                signature: response.razorpay_signature,
                 ...booking,
                 totalPaid: totalAmount,
                 date: new Date().toISOString()
@@ -231,6 +232,42 @@ export default function CartClient() {
                   </>
                 )}
               </button>
+
+              {process.env.NODE_ENV === "development" && (
+                <button
+                  onClick={async () => {
+                    setIsLoading(true);
+                    try {
+                      const mockResponse = {
+                        razorpay_payment_id: `pay_mock_${Date.now()}`,
+                        razorpay_order_id: `order_mock_${Date.now()}`
+                      };
+                      await fetch("/api/save-booking", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          paymentId: mockResponse.razorpay_payment_id,
+                          orderId: mockResponse.razorpay_order_id,
+                          signature: "mock_signature",
+                          ...booking,
+                          totalPaid: totalAmount,
+                          date: new Date().toISOString()
+                        })
+                      });
+                      localStorage.removeItem("pending_booking");
+                      router.push("/success");
+                    } catch (e) {
+                      console.error("Mock payment failed", e);
+                    } finally {
+                      setIsLoading(false);
+                    }
+                  }}
+                  disabled={isLoading}
+                  className="w-full mt-3 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[15px] tracking-wide py-3.5 rounded-xl transition-all shadow-lg flex items-center justify-center"
+                >
+                  ⚠️ [DEV] Simulate Payment Success
+                </button>
+              )}
 
               <div className="mt-5 bg-gray-50 rounded-xl p-3 flex items-center justify-center gap-2 text-xs text-gray-600 font-bold">
                 <FiShield className="text-emerald-500 text-base" /> 100% Safe & Secure Payments

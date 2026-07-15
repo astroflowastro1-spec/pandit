@@ -220,12 +220,55 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
 
   // Countdown timer logic
   useEffect(() => {
+    /**
+     * Parse all dates from a string like "14th July / 12th August 2026"
+     * and return the FIRST one that is still in the future.
+     * Falls back to the last date if all are past.
+     */
+    const parseNextUpcomingDate = (dateStr: string): Date | null => {
+      try {
+        // Extract year from anywhere in the full string
+        const yearMatch = dateStr.match(/\b(20\d{2})\b/);
+        const year = yearMatch ? yearMatch[1] : new Date().getFullYear().toString();
+
+        // Split on "/" to get each date segment
+        const segments = dateStr.split('/').map(s => s.trim());
+
+        const now = new Date().getTime();
+        let lastValidDate: Date | null = null;
+
+        for (const segment of segments) {
+          // Strip ordinal suffixes: 14th → 14, 2nd → 2, etc.
+          let clean = segment.replace(/(\d+)(st|nd|rd|th)/gi, '$1');
+
+          // Append year if not already in this segment
+          if (!clean.match(/\b20\d{2}\b/)) {
+            clean = `${clean} ${year}`;
+          }
+
+          const parsed = new Date(clean);
+          if (isNaN(parsed.getTime())) continue;
+
+          lastValidDate = parsed;
+
+          // Return the first date that is still in the future
+          if (parsed.getTime() > now) {
+            return parsed;
+          }
+        }
+
+        // All dates are past — return last one (timer will show 0)
+        return lastValidDate;
+      } catch {
+        return null;
+      }
+    };
+
     const calculateTimeLeft = () => {
       try {
-        const cleanDateStr = Chadhava.date.split(',')[0].trim();
-        const targetDate = new Date(cleanDateStr);
-        if (isNaN(targetDate.getTime())) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-        
+        const targetDate = parseNextUpcomingDate(Chadhava.date);
+        if (!targetDate) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
         const now = new Date().getTime();
         const difference = targetDate.getTime() - now;
 

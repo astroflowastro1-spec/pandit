@@ -65,28 +65,19 @@ export default function AdminLayout({
             Add New Chadhava
           </Link>
 
+
           <Link
-            href="/admin/products"
+            href="/admin/bookings"
             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors mt-4 border-t pt-6 border-gray-100 ${
-              pathname === "/admin/products"
-                ? "bg-emerald-50 text-emerald-700"
+              pathname === "/admin/bookings"
+                ? "bg-[#FEF3C7] text-[#D97706]"
                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
             }`}
           >
             <FiList className="text-lg" />
-            All Products
+            Bookings & Orders
           </Link>
-          <Link
-            href="/admin/add-product"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-              pathname === "/admin/add-product"
-                ? "bg-emerald-50 text-emerald-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiPlusSquare className="text-lg" />
-            Add New Product
-          </Link>
+
           <Link
             href="/"
             className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors mt-8"
