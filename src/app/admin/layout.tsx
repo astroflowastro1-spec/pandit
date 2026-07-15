@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FiHome, FiPlusSquare, FiList } from "react-icons/fi";
+import { usePathname, useRouter } from "next/navigation";
+import { FiHome, FiPlusSquare, FiList, FiLogOut } from "react-icons/fi";
 
 export default function AdminLayout({
   children,
@@ -10,15 +10,28 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Don't show sidebar on login page
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
+  const handleLogout = async () => {
+    await fetch("/api/admin/login", { method: "DELETE" });
+    router.push("/admin/login");
+    router.refresh();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-white border-r border-gray-200 flex-shrink-0">
+      <aside className="w-full md:w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-xl font-bold text-[#2563EB]">Pndit Admin</h2>
+          <p className="text-xs text-gray-400 font-medium mt-0.5">merepanditji.org</p>
         </div>
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 flex-1">
           <Link
             href="/admin"
             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
@@ -65,7 +78,6 @@ export default function AdminLayout({
             Add New Chadhava
           </Link>
 
-
           <Link
             href="/admin/bookings"
             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors mt-4 border-t pt-6 border-gray-100 ${
@@ -86,6 +98,17 @@ export default function AdminLayout({
             Back to Website
           </Link>
         </nav>
+
+        {/* Logout Button */}
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm text-red-600 hover:bg-red-50 transition-colors"
+          >
+            <FiLogOut className="text-lg" />
+            Logout
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
