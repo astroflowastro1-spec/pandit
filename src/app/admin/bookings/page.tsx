@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FiSearch, FiCalendar, FiUser, FiPhone, FiInfo, FiTrendingUp, FiDollarSign, FiClock, FiActivity } from "react-icons/fi";
+import { FiSearch, FiCalendar, FiPhone, FiInfo, FiTrendingUp, FiDollarSign, FiActivity, FiTrash2, FiMessageCircle, FiAlertCircle, FiCheckCircle } from "react-icons/fi";
 
 interface BookingType {
   _id: string;
@@ -24,6 +24,7 @@ interface BookingType {
   totalPaid: number;
   date: string;
   createdAt: string;
+  whatsappSent: boolean;
 }
 
 export default function BookingsPage() {
@@ -32,6 +33,8 @@ export default function BookingsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<BookingType | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null); // ID of booking to delete
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetchBookings();
@@ -73,10 +76,34 @@ export default function BookingsPage() {
     }
   }, [searchTerm, bookings]);
 
+  const handleDelete = async (id: string) => {
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setBookings((prev) => prev.filter((b) => b._id !== id));
+        setFilteredBookings((prev) => prev.filter((b) => b._id !== id));
+        if (selectedBooking?._id === id) setSelectedBooking(null);
+      } else {
+        alert("Failed to delete: " + data.error);
+      }
+    } catch (err) {
+      alert("Error deleting booking.");
+    }
+    setDeleting(false);
+    setDeleteConfirm(null);
+  };
+
   // Metrics
   const totalPaidSum = bookings.reduce((sum, b) => sum + (b.totalPaid || b.packagePrice || 0), 0);
   const totalCount = bookings.length;
-  
+  const whatsappSentCount = bookings.filter((b) => b.whatsappSent).length;
+
   // Format price helper
   const formatPaidPrice = (amount: number, code: string = "INR") => {
     try {
@@ -99,7 +126,7 @@ export default function BookingsPage() {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-2xl p-6 border border-gray-150 shadow-sm flex items-center gap-5">
           <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 text-xl font-bold shrink-0">
             <FiActivity />
@@ -127,9 +154,22 @@ export default function BookingsPage() {
             <FiTrendingUp />
           </div>
           <div>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Average Order Value</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Avg Order Value</p>
             <p className="text-2xl font-black text-gray-900 mt-1">
               {totalCount > 0 ? formatPaidPrice(Math.round(totalPaidSum / totalCount)) : "₹0"}
+            </p>
+          </div>
+        </div>
+
+        {/* WhatsApp Sent Card */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-150 shadow-sm flex items-center gap-5">
+          <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 text-xl font-bold shrink-0">
+            <FiMessageCircle />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">WhatsApp Sent</p>
+            <p className="text-2xl font-black text-gray-900 mt-1">
+              {whatsappSentCount} <span className="text-sm font-semibold text-gray-400">/ {totalCount}</span>
             </p>
           </div>
         </div>
@@ -160,7 +200,7 @@ export default function BookingsPage() {
       ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-250 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[900px]">
+            <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-6 py-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Customer</th>
@@ -168,6 +208,7 @@ export default function BookingsPage() {
                   <th className="px-6 py-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Package Details</th>
                   <th className="px-6 py-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Total Paid</th>
                   <th className="px-6 py-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Date & Payment ID</th>
+                  <th className="px-6 py-4 font-bold text-gray-600 text-xs uppercase tracking-wider text-center">WhatsApp</th>
                   <th className="px-6 py-4 font-bold text-gray-600 text-xs uppercase tracking-wider text-center">Action</th>
                 </tr>
               </thead>
@@ -202,8 +243,6 @@ export default function BookingsPage() {
                           {booking.packageId}
                         </span>
                         <p className="font-semibold text-gray-800 text-xs line-clamp-1">{booking.packageTitle}</p>
-                        
-                        {/* Member names check */}
                         {(booking.member2Name || booking.member3Name || booking.member4Name) && (
                           <div className="mt-1 flex flex-wrap gap-1">
                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Devotees:</span>
@@ -238,19 +277,68 @@ export default function BookingsPage() {
                       </div>
                     </td>
 
-                    {/* Details Action */}
+                    {/* WhatsApp Status */}
                     <td className="px-6 py-5 text-center">
-                      <button
-                        onClick={() => setSelectedBooking(booking)}
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs py-1.5 px-3 rounded-lg transition-colors inline-flex items-center gap-1"
-                      >
-                        <FiInfo /> View Details
-                      </button>
+                      {booking.whatsappSent ? (
+                        <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-[10px] font-black px-2.5 py-1 rounded-full border border-green-200">
+                          <FiCheckCircle className="text-xs" /> Sent
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 bg-red-50 text-red-600 text-[10px] font-black px-2.5 py-1 rounded-full border border-red-200">
+                          <FiAlertCircle className="text-xs" /> Not Sent
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-6 py-5 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => setSelectedBooking(booking)}
+                          className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs py-1.5 px-3 rounded-lg transition-colors inline-flex items-center gap-1"
+                        >
+                          <FiInfo /> View
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirm(booking._id)}
+                          className="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs py-1.5 px-3 rounded-lg transition-colors inline-flex items-center gap-1"
+                        >
+                          <FiTrash2 /> Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-sm w-full shadow-2xl border border-gray-150 p-8 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiTrash2 className="text-red-600 text-2xl" />
+            </div>
+            <h3 className="text-xl font-extrabold text-gray-900 mb-2">Delete Booking?</h3>
+            <p className="text-gray-500 text-sm mb-6">Yeh booking permanently delete ho jayegi. Kya aap sure hain?</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-extrabold text-sm py-3 rounded-xl transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(deleteConfirm)}
+                disabled={deleting}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm py-3 rounded-xl transition-colors disabled:opacity-60"
+              >
+                {deleting ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -275,6 +363,21 @@ export default function BookingsPage() {
 
             {/* Modal Content */}
             <div className="p-6 overflow-y-auto space-y-6">
+              {/* WhatsApp Status Banner */}
+              <div className={`rounded-xl px-4 py-3 flex items-center gap-3 border ${selectedBooking.whatsappSent ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                <FiMessageCircle className={`text-lg ${selectedBooking.whatsappSent ? 'text-green-600' : 'text-red-500'}`} />
+                <div>
+                  <p className={`text-xs font-extrabold ${selectedBooking.whatsappSent ? 'text-green-700' : 'text-red-700'}`}>
+                    WhatsApp Confirmation: {selectedBooking.whatsappSent ? '✅ Sent Successfully' : '❌ Not Sent'}
+                  </p>
+                  <p className="text-[10px] text-gray-500 mt-0.5">
+                    {selectedBooking.whatsappSent
+                      ? `Message sent to +91 ${selectedBooking.customerPhone}`
+                      : 'Message could not be delivered to customer'}
+                  </p>
+                </div>
+              </div>
+
               {/* Customer Info */}
               <div>
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Customer & Devotee Information</h4>
@@ -292,7 +395,6 @@ export default function BookingsPage() {
                     <span className="text-xs font-extrabold text-orange-600 text-right">{selectedBooking.customerGotra}</span>
                   </div>
 
-                  {/* Devotee names listed explicitly */}
                   {(selectedBooking.member2Name || selectedBooking.member3Name || selectedBooking.member4Name) && (
                     <div className="border-t border-gray-200 pt-3 mt-1 space-y-2">
                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider">Additional Devotees</p>
@@ -371,7 +473,13 @@ export default function BookingsPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end">
+            <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-between items-center">
+              <button
+                onClick={() => setDeleteConfirm(selectedBooking._id)}
+                className="bg-red-50 hover:bg-red-100 text-red-600 font-extrabold text-xs py-2 px-4 rounded-xl transition-colors inline-flex items-center gap-1.5"
+              >
+                <FiTrash2 /> Delete Booking
+              </button>
               <button
                 onClick={() => setSelectedBooking(null)}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs py-2 px-5 rounded-xl transition-colors"

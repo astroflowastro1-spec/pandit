@@ -19,6 +19,7 @@ export interface IBooking extends Document {
   member4Name?: string;
   totalPaid: number;
   date: string;
+  whatsappSent: boolean;
 }
 
 const BookingSchema: Schema = new Schema({
@@ -40,6 +41,7 @@ const BookingSchema: Schema = new Schema({
   member4Name: { type: String },
   totalPaid: { type: Number, required: true },
   date: { type: String, required: true },
+  whatsappSent: { type: Boolean, default: false },
 }, { timestamps: true });
 
 if (mongoose.models.Booking) {

@@ -60,12 +60,22 @@ export async function POST(req: Request) {
       // We don't block the execution since we also have the webhook.
     }
 
-    // 3. Send WhatsApp Confirmation Asynchronously (non-blocking)
+    // 3. Send WhatsApp Confirmation and track status
     if (isSaved || data.paymentId) {
-      // Run asynchronously without waiting
-      sendWhatsAppConfirmation(data).catch(err => {
-        console.error("Error in async WhatsApp confirmation:", err);
-      });
+      try {
+        await sendWhatsAppConfirmation(data);
+        // Update booking with whatsappSent = true
+        if (isSaved) {
+          await Booking.findOneAndUpdate(
+            { paymentId: data.paymentId },
+            { whatsappSent: true }
+          );
+        }
+        console.log("WhatsApp confirmation sent successfully for:", data.paymentId);
+      } catch (err) {
+        console.error("Error sending WhatsApp confirmation:", err);
+        // whatsappSent remains false (default)
+      }
     }
 
     // 4. Forward to Google Sheets Webhook
