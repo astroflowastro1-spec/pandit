@@ -88,3 +88,102 @@ export const sendWhatsAppConfirmation = async (orderData: any) => {
     console.error("Error formatting or sending WhatsApp message:", error.message);
   }
 };
+
+/**
+ * Send an abandoned cart WhatsApp message when user fails to complete payment.
+ * Uses the "abondoned cart" campaign on AiSensy.
+ */
+export const sendAbandonedCartWhatsApp = async (cartData: {
+  customerName: string;
+  customerPhone: string;
+  pujaTitle?: string;
+  packageTitle?: string;
+  packagePrice?: number;
+}) => {
+  const url = process.env.AISENSY_API_URL;
+  const apiKey = process.env.AISENSY_API_KEY;
+
+  if (!url || !apiKey) {
+    console.error("AiSensy API credentials are not configured.");
+    return;
+  }
+
+  try {
+    let customerPhone = cartData.customerPhone;
+    if (!customerPhone) {
+      console.error("No customer phone number provided for abandoned cart.");
+      return;
+    }
+
+    // Format phone number
+    customerPhone = customerPhone.toString().replace(/\D/g, '');
+    if (customerPhone.length === 10) {
+      customerPhone = '91' + customerPhone;
+    }
+
+    if (!customerPhone.startsWith('91') || customerPhone.length < 12) {
+      console.error("Invalid phone number format for AiSensy:", customerPhone);
+      return;
+    }
+
+    // Extract first name
+    const firstName = (cartData.customerName || "User").split(' ')[0];
+
+    // The "abondoned cart" campaign expects 3 template params — all $FirstName
+    const payload = {
+      apiKey: apiKey,
+      campaignName: "abondoned cart",
+      destination: customerPhone,
+      userName: firstName,
+      templateParams: [
+        firstName,
+        firstName,
+        firstName
+      ],
+      source: "new-landing-page form",
+      media: {},
+      buttons: [],
+      carouselCards: [],
+      location: {},
+      attributes: {},
+      paramsFallbackValue: {
+        FirstName: "user"
+      }
+    };
+
+    const maxRetries = 3;
+    let attempt = 0;
+
+    while (attempt < maxRetries) {
+      try {
+        const response = await axios.post(url, payload, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        console.log("✅ Abandoned cart WhatsApp sent:", {
+          customerPhone,
+          customerName: cartData.customerName,
+          pujaTitle: cartData.pujaTitle,
+          status: response.status,
+          timestamp: new Date().toISOString()
+        });
+        return; // Success
+      } catch (err: any) {
+        attempt++;
+        console.error(`Abandoned cart WhatsApp attempt ${attempt} failed:`, err.message);
+        if (attempt >= maxRetries) {
+          console.error("Failed to send abandoned cart WhatsApp after 3 attempts:", {
+            customerPhone,
+            error: err.response?.data || err.message,
+            timestamp: new Date().toISOString()
+          });
+        } else {
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+        }
+      }
+    }
+
+  } catch (error: any) {
+    console.error("Error sending abandoned cart WhatsApp:", error.message);
+  }
+};

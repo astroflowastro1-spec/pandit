@@ -20,6 +20,8 @@ export default function CartClient() {
     }
   }, [router]);
 
+  const [abandonedCartSent, setAbandonedCartSent] = useState(false);
+
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -103,6 +105,31 @@ export default function CartClient() {
           localStorage.removeItem("pending_booking");
           router.push("/success");
         },
+        modal: {
+          ondismiss: async function () {
+            // User closed Razorpay modal without completing payment → abandoned cart
+            console.log("Payment modal dismissed — triggering abandoned cart notification");
+            if (!abandonedCartSent) {
+              setAbandonedCartSent(true);
+              try {
+                await fetch("/api/abandoned-cart", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    customerName: booking.customerName,
+                    customerPhone: booking.customerPhone,
+                    pujaTitle: booking.pujaTitle,
+                    packageTitle: booking.packageTitle,
+                    packagePrice: booking.packagePrice,
+                  }),
+                });
+                console.log("Abandoned cart WhatsApp notification sent");
+              } catch (e) {
+                console.error("Failed to send abandoned cart notification", e);
+              }
+            }
+          },
+        },
       };
 
       const paymentObject = new (window as any).Razorpay(options);
@@ -114,6 +141,7 @@ export default function CartClient() {
       setIsLoading(false);
     }
   };
+
 
   if (!booking) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div></div>;
 
