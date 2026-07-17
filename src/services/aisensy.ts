@@ -137,8 +137,8 @@ export const sendAbandonedCartWhatsApp = async (cartData: {
       userName: firstName,
       templateParams: [
         firstName,
-        firstName,
-        firstName
+        cartData.pujaTitle || "your Puja",
+        "https://merepanditji.org/cart"
       ],
       source: "new-landing-page form",
       media: {},
