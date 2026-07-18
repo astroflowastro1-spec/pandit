@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import SafeImage from "@/components/ui/SafeImage";
+import HowItWorks from "@/components/ui/HowItWorks";
 import Link from "next/link";
 import { FiCalendar, FiMapPin, FiCheck, FiChevronRight, FiChevronLeft, FiShield, FiVideo, FiGift, FiClock, FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
 import { GoHome } from "react-icons/go";
@@ -460,6 +461,9 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
           </div>
 
         </div>
+
+        {/* How this works section */}
+        <HowItWorks type="Puja" />
 
         {/* Navigation Tabs Bar */}
         <div className="sticky top-[70px] md:top-[80px] bg-white z-30 border-t border-b border-gray-100 py-3.5 mb-10 -mx-4 px-4 md:mx-0 md:px-0 shadow-sm">

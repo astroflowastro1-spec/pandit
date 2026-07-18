@@ -1,6 +1,6 @@
 "use client";
 import Image, { ImageProps } from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type SafeImageProps = Omit<ImageProps, "onError"> & {
   fallbackSrc?: string;
@@ -12,8 +12,11 @@ export default function SafeImage({
   fallbackSrc = "/placeholder-puja.png",
   ...props
 }: SafeImageProps) {
-  const [imgSrc, setImgSrc] = useState(src);
   const [errored, setErrored] = useState(false);
+
+  useEffect(() => {
+    setErrored(false);
+  }, [src]);
 
   return (
     <>
@@ -40,7 +43,7 @@ export default function SafeImage({
       ) : (
         <Image
           {...props}
-          src={imgSrc}
+          src={src}
           alt={alt}
           onError={() => setErrored(true)}
         />
