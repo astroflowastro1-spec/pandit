@@ -46,31 +46,27 @@ export async function POST(request: Request) {
     let sliderImage1Src = "";
     let sliderImage2Src = "";
 
-    if (image && image.name) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      imageSrc = await uploadToCloudinary(buffer);
-    } else {
+    if (!image || !image.name) {
       return NextResponse.json({ success: false, error: 'Image is required' }, { status: 400 });
     }
 
-    if (templeImage && templeImage.name) {
-      const bytes = await templeImage.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      templeImageSrc = await uploadToCloudinary(buffer);
-    }
+    const uploadTasks: Promise<void>[] = [];
 
-    if (sliderImage1 && sliderImage1.name) {
-      const bytes = await sliderImage1.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      sliderImage1Src = await uploadToCloudinary(buffer);
-    }
+    const processUpload = async (file: File | null, assignUrl: (url: string) => void) => {
+      if (file && file.name) {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const url = await uploadToCloudinary(buffer);
+        assignUrl(url);
+      }
+    };
 
-    if (sliderImage2 && sliderImage2.name) {
-      const bytes = await sliderImage2.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      sliderImage2Src = await uploadToCloudinary(buffer);
-    }
+    uploadTasks.push(processUpload(image, (url) => { imageSrc = url; }));
+    uploadTasks.push(processUpload(templeImage, (url) => { templeImageSrc = url; }));
+    uploadTasks.push(processUpload(sliderImage1, (url) => { sliderImage1Src = url; }));
+    uploadTasks.push(processUpload(sliderImage2, (url) => { sliderImage2Src = url; }));
+
+    await Promise.all(uploadTasks);
 
     // Generate a URL-friendly slug from the title
     const generateSlug = (text: string) => {

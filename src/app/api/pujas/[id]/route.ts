@@ -53,39 +53,52 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
 
     let imageSrc = existingPuja.imageSrc; // keep existing by default
-
-    // If a new image is uploaded
-    if (image && image.name && image.size > 0) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      imageSrc = await uploadToCloudinary(buffer);
-    }
-
     let templeImageSrc = existingPuja.templeImageSrc || "";
-    if (templeImage && templeImage.name && templeImage.size > 0) {
-      const bytes = await templeImage.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      templeImageSrc = await uploadToCloudinary(buffer);
-    }
-
     let sliderImage1Src = existingPuja.sliderImage1Src || "";
-    if (sliderImage1 && sliderImage1.name && sliderImage1.size > 0) {
-      const bytes = await sliderImage1.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      sliderImage1Src = await uploadToCloudinary(buffer);
-    }
-
     let sliderImage2Src = existingPuja.sliderImage2Src || "";
-    if (sliderImage2 && sliderImage2.name && sliderImage2.size > 0) {
-      const bytes = await sliderImage2.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      sliderImage2Src = await uploadToCloudinary(buffer);
-    }
 
-    // Determine slug (only update if title changed and it's fundamentally different)
-    // For safety, we can just keep the old slug, or generate a new one if it's explicitly needed.
-    // Let's keep the old slug to avoid breaking existing links unless we want to rebuild it.
-    // We will keep the old slug.
+    const uploadTasks: Promise<void>[] = [];
+
+    const processUpload = async (file: File | null, assignUrl: (url: string) => void) => {
+      if (file && file.name && file.size > 0) {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const url = await uploadToCloudinary(buffer);
+        assignUrl(url);
+      }
+    };
+
+    uploadTasks.push(processUpload(image, (url) => { imageSrc = url; }));
+    uploadTasks.push(processUpload(templeImage, (url) => { templeImageSrc = url; }));
+    uploadTasks.push(processUpload(sliderImage1, (url) => { sliderImage1Src = url; }));
+    uploadTasks.push(processUpload(sliderImage2, (url) => { sliderImage2Src = url; }));
+
+    await Promise.all(uploadTasks);
+
+    // Generate a URL-friendly slug from the title
+    const generateSlug = (text: string) => {
+      return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')        // Replace spaces with -
+        .replace(/[^\w\-]+/g, '')   // Remove all non-word chars
+        .replace(/\-\-+/g, '-');      // Replace multiple - with single -
+    };
+
+    let baseSlug = generateSlug(title as string);
+    let slug = baseSlug;
+    
+    // Ensure slug is unique, but ignore the current puja's own slug
+    if (existingPuja.slug !== slug) {
+      let slugCounter = 1;
+      while (await Puja.findOne({ slug, _id: { $ne: id } })) {
+        slug = `${baseSlug}-${slugCounter}`;
+        slugCounter++;
+      }
+    } else {
+      slug = existingPuja.slug;
+    }
 
     // Parse Packages if they are provided, else keep existing
     // We can just re-build them.
@@ -136,6 +149,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       id,
       {
         title,
+        slug,
         redSubtitle,
         description,
         location,
