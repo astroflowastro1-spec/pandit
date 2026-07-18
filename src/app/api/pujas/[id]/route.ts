@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { Puja } from '@/models/Puja';
-import { writeFile, unlink } from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -59,42 +58,28 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (image && image.name && image.size > 0) {
       const bytes = await image.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      
-      const uniqueName = Date.now() + '-' + image.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      
-      await writeFile(uploadPath, buffer);
-      imageSrc = `/uploads/${uniqueName}`;
+      imageSrc = await uploadToCloudinary(buffer);
     }
 
     let templeImageSrc = existingPuja.templeImageSrc || "";
     if (templeImage && templeImage.name && templeImage.size > 0) {
       const bytes = await templeImage.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-temple-' + templeImage.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      templeImageSrc = `/uploads/${uniqueName}`;
+      templeImageSrc = await uploadToCloudinary(buffer);
     }
 
     let sliderImage1Src = existingPuja.sliderImage1Src || "";
     if (sliderImage1 && sliderImage1.name && sliderImage1.size > 0) {
       const bytes = await sliderImage1.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-slider1-' + sliderImage1.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      sliderImage1Src = `/uploads/${uniqueName}`;
+      sliderImage1Src = await uploadToCloudinary(buffer);
     }
 
     let sliderImage2Src = existingPuja.sliderImage2Src || "";
     if (sliderImage2 && sliderImage2.name && sliderImage2.size > 0) {
       const bytes = await sliderImage2.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-slider2-' + sliderImage2.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      sliderImage2Src = `/uploads/${uniqueName}`;
+      sliderImage2Src = await uploadToCloudinary(buffer);
     }
 
     // Determine slug (only update if title changed and it's fundamentally different)

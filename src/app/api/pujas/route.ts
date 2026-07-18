@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { Puja } from '@/models/Puja';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function GET() {
   try {
@@ -50,15 +49,7 @@ export async function POST(request: Request) {
     if (image && image.name) {
       const bytes = await image.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      
-      // Create a unique filename
-      const uniqueName = Date.now() + '-' + image.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      
-      await writeFile(uploadPath, buffer);
-      
-      // Path that the frontend will use to load the image
-      imageSrc = `/uploads/${uniqueName}`;
+      imageSrc = await uploadToCloudinary(buffer);
     } else {
       return NextResponse.json({ success: false, error: 'Image is required' }, { status: 400 });
     }
@@ -66,28 +57,19 @@ export async function POST(request: Request) {
     if (templeImage && templeImage.name) {
       const bytes = await templeImage.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-temple-' + templeImage.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      templeImageSrc = `/uploads/${uniqueName}`;
+      templeImageSrc = await uploadToCloudinary(buffer);
     }
 
     if (sliderImage1 && sliderImage1.name) {
       const bytes = await sliderImage1.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-slider1-' + sliderImage1.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      sliderImage1Src = `/uploads/${uniqueName}`;
+      sliderImage1Src = await uploadToCloudinary(buffer);
     }
 
     if (sliderImage2 && sliderImage2.name) {
       const bytes = await sliderImage2.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-slider2-' + sliderImage2.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      sliderImage2Src = `/uploads/${uniqueName}`;
+      sliderImage2Src = await uploadToCloudinary(buffer);
     }
 
     // Generate a URL-friendly slug from the title
