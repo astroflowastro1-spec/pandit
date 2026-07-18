@@ -71,6 +71,7 @@ export default function Hero() {
               src={slide.imageSrc} 
               alt={`Banner ${index + 1}`} 
               fill
+              sizes="100vw"
               className="object-cover object-center hidden md:block"
               priority={index === 0}
             />
@@ -80,6 +81,7 @@ export default function Hero() {
               src={slide.mobileImageSrc} 
               alt={`Banner ${index + 1} Mobile`} 
               fill
+              sizes="100vw"
               className="object-cover object-center block md:hidden"
               priority={index === 0}
             />

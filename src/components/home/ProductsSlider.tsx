@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { useCountry } from "@/context/CountryContext";
@@ -70,10 +70,11 @@ export default function ProductsSlider() {
               <SwiperSlide key={product._id} className="h-auto">
                 <div className="bg-white rounded-2xl border border-gray-100 hover:border-emerald-500 hover:shadow-xl transition-all duration-300 h-full flex flex-col overflow-hidden group">
                   <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
-                    <Image 
+                    <SafeImage 
                       src={product.imageSrc} 
                       alt={product.title} 
                       fill 
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       className="object-cover group-hover:scale-110 transition-transform duration-500" 
                     />
                     {formattedOriginalPrice && (

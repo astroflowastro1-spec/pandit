@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { FiCalendar, FiMapPin, FiCheck, FiChevronRight, FiChevronLeft, FiShield, FiVideo, FiGift, FiClock, FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
 import { GoHome } from "react-icons/go";
@@ -368,7 +368,7 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
   }, [sliderImages.length]);
 
   return (
-    <div className="bg-white min-h-screen font-sans">
+    <div className="bg-white min-h-screen font-sans pt-[72px]">
       
       <div className="container mx-auto px-4 md:px-8 lg:px-16 py-8">
         
@@ -381,10 +381,11 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
               
               {/* Image Section */}
               <div className="relative w-full aspect-[4/3] sm:aspect-video md:aspect-auto md:h-[480px] overflow-hidden group">
-                <Image 
+                <SafeImage 
                   src={sliderImages[currentSlide]} 
                   alt={Chadhava.title} 
                   fill
+                  sizes="(max-width: 1024px) 100vw, 58vw"
                   className="object-cover object-left md:object-center transition-opacity duration-500"
                   priority
                 />
@@ -598,10 +599,11 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
                 {Chadhava.templeImageSrc && (
                   <div className="md:col-span-5 relative w-full h-[250px] md:h-[300px] rounded-2xl overflow-hidden shadow-sm">
-                    <Image 
+                    <SafeImage 
                       src={Chadhava.templeImageSrc} 
                       alt="Temple" 
                       fill
+                      sizes="(max-width: 768px) 100vw, 42vw"
                       className="object-cover"
                     />
                   </div>
@@ -730,10 +732,11 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                 <div className="flex flex-col items-center gap-3 shrink-0">
                   <div className="w-[100px] h-[100px] bg-[#F5F9F6] rounded-xl overflow-hidden relative shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 flex items-center justify-center p-2">
                     {/* Fallback image if no package-specific image exists, using the main Chadhava image */}
-                    <Image 
+                    <SafeImage 
                       src={pkg.imageSrc || Chadhava.imageSrc}
                       alt={pkg.title}
                       fill
+                      sizes="100px"
                       className="object-cover opacity-90"
                     />
                   </div>
@@ -911,10 +914,11 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
 
                       <div className="flex flex-col items-center gap-2 shrink-0">
                         <div className="w-[80px] h-[80px] bg-[#F5F9F6] rounded-xl overflow-hidden relative shadow-sm border border-gray-100 p-1">
-                          <Image 
+                          <SafeImage 
                             src={pkg.imageSrc || Chadhava.imageSrc}
                             alt={pkg.title}
                             fill
+                            sizes="80px"
                             className="object-cover opacity-90"
                           />
                         </div>

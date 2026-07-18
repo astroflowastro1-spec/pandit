@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { FiCalendar, FiArrowRight } from "react-icons/fi";
 import { GoHome } from "react-icons/go";
@@ -67,10 +67,11 @@ export default function UpcomingPujas() {
               
               {/* Image Section */}
               <Link href={`/puja/${puja.slug}`} className="relative w-full h-[220px] block group overflow-hidden cursor-pointer">
-                <Image 
+                <SafeImage 
                   src={puja.imageSrc} 
                   alt={puja.title} 
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 

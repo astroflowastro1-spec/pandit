@@ -45,6 +45,7 @@ export default function PujaBanner() {
                     src={src}
                     alt={`Puja Banner ${index + 1}`}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 1024px"
                     className="object-contain object-center"
                     priority={index === 0}
                   />

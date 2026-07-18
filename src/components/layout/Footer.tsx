@@ -24,6 +24,7 @@ export default function Footer() {
                   src="/logo.avif" 
                   alt="Mere Pandit Ji" 
                   fill 
+                  sizes="192px"
                   className="object-contain object-left px-2" 
                 />
               </div>

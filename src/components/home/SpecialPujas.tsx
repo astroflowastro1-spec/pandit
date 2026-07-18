@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiCalendar, FiArrowRight } from "react-icons/fi";
@@ -89,10 +89,11 @@ export default function SpecialPujas() {
               
               {/* Image Section */}
               <Link href={`/puja/${puja.slug}`} className="relative w-full h-[220px] block group overflow-hidden cursor-pointer">
-                <Image 
+                <SafeImage 
                   src={puja.imageSrc} 
                   alt={puja.title} 
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

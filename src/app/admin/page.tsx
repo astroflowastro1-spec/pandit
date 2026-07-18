@@ -113,12 +113,22 @@ export default function AdminDashboard() {
                             <td className="px-6 py-4" {...provided.dragHandleProps}>
                               <FiMove className="text-gray-400 cursor-grab active:cursor-grabbing hover:text-gray-600" />
                             </td>
-                            <td className="px-6 py-4">
-                              <p className="font-semibold text-gray-900 line-clamp-1">{puja.title}</p>
-                              <p className="text-xs text-pink-600 mt-1 uppercase tracking-wider font-bold">
-                                {puja.redSubtitle}
-                              </p>
-                            </td>
+                             <td className="px-6 py-4">
+                               <p className="font-semibold text-gray-900 line-clamp-1 flex items-center gap-2">
+                                 {puja.title}
+                                 {puja.imageSrc && puja.imageSrc.startsWith('/uploads/') && (
+                                   <span 
+                                     title="Image may need re-upload if file is missing"
+                                     className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-200 rounded-full font-medium"
+                                   >
+                                     📷 Check Image
+                                   </span>
+                                 )}
+                               </p>
+                               <p className="text-xs text-pink-600 mt-1 uppercase tracking-wider font-bold">
+                                 {puja.redSubtitle}
+                               </p>
+                             </td>
                             <td className="px-6 py-4 text-gray-600 text-sm">{puja.location}</td>
                             <td className="px-6 py-4 text-gray-600 text-sm">{puja.date}</td>
                             <td className="px-6 py-4">

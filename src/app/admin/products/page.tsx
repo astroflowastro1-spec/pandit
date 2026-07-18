@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { FiEdit2, FiTrash2, FiPlus } from "react-icons/fi";
 
@@ -71,7 +71,7 @@ export default function ProductsPage() {
                   <tr key={product._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-                        <Image src={product.imageSrc} alt={product.title} fill className="object-cover" />
+                        <SafeImage src={product.imageSrc} alt={product.title} fill sizes="80px" className="object-cover" />
                       </div>
                     </td>
                     <td className="px-6 py-4">

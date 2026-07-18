@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { FiCalendar, FiMapPin, FiCheck, FiChevronRight, FiChevronLeft, FiShield, FiVideo, FiGift, FiClock, FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
 import { GoHome } from "react-icons/go";
@@ -307,7 +307,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
   }, [sliderImages.length]);
 
   return (
-    <div className="bg-white min-h-screen font-sans">
+    <div className="bg-white min-h-screen font-sans pt-[72px]">
       
       <div className="container mx-auto px-4 md:px-8 lg:px-16 py-8">
         
@@ -320,10 +320,11 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
               
               {/* Image Section */}
               <div className="relative w-full aspect-[4/3] sm:aspect-video md:aspect-auto md:h-[480px] overflow-hidden group">
-                <Image 
+                <SafeImage 
                   src={sliderImages[currentSlide]} 
                   alt={puja.title} 
                   fill
+                  sizes="(max-width: 1024px) 100vw, 58vw"
                   className="object-cover object-left md:object-center transition-opacity duration-500"
                   priority
                 />
@@ -537,10 +538,11 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
                 {puja.templeImageSrc && (
                   <div className="md:col-span-5 relative w-full h-[250px] md:h-[300px] rounded-2xl overflow-hidden shadow-sm">
-                    <Image 
+                    <SafeImage 
                       src={puja.templeImageSrc} 
                       alt="Temple" 
                       fill
+                      sizes="(max-width: 768px) 100vw, 42vw"
                       className="object-cover"
                     />
                   </div>
