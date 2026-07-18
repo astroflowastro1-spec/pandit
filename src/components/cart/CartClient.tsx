@@ -121,6 +121,7 @@ export default function CartClient() {
                     pujaTitle: booking.pujaTitle,
                     packageTitle: booking.packageTitle,
                     packagePrice: booking.packagePrice,
+                    productUrl: booking.productUrl,
                   }),
                 });
                 console.log("Abandoned cart WhatsApp notification sent");

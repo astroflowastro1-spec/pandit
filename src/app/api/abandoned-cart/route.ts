@@ -20,6 +20,7 @@ export async function POST(req: Request) {
       pujaTitle: data.pujaTitle,
       packageTitle: data.packageTitle,
       packagePrice: data.packagePrice,
+      productUrl: data.productUrl,
     });
 
     console.log('📱 Abandoned cart WhatsApp triggered for:', data.customerPhone);

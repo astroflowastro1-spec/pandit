@@ -1076,6 +1076,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                       pujaTitle: puja.title,
                       pujaDate: puja.date,
                       pujaLocation: puja.location,
+                      productUrl: "https://merepanditji.org/puja/" + puja.slug,
                       packageId: selectedPkg?.id,
                       packageTitle: selectedPkg?.title,
                       packagePrice: selectedPkg?.priceConverted || selectedPkg?.price,

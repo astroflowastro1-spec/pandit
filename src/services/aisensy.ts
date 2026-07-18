@@ -99,6 +99,7 @@ export const sendAbandonedCartWhatsApp = async (cartData: {
   pujaTitle?: string;
   packageTitle?: string;
   packagePrice?: number;
+  productUrl?: string;
 }) => {
   const url = process.env.AISENSY_API_URL;
   const apiKey = process.env.AISENSY_API_KEY;
@@ -138,7 +139,7 @@ export const sendAbandonedCartWhatsApp = async (cartData: {
       templateParams: [
         firstName,
         cartData.pujaTitle || "your Puja",
-        "https://merepanditji.org/cart"
+        cartData.productUrl || "https://merepanditji.org/cart"
       ],
       source: "new-landing-page form",
       media: {},

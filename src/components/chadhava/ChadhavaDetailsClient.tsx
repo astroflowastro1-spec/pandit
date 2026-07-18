@@ -1146,6 +1146,7 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                         pujaTitle: Chadhava.title,
                         pujaDate: Chadhava.date,
                         pujaLocation: Chadhava.location,
+                        productUrl: "https://merepanditji.org/chadhava/" + Chadhava.slug,
                         packageId: "multiple",
                         packageTitle: packageTitles,
                         packagePrice: totalPrice,
