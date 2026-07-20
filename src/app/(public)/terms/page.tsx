@@ -43,7 +43,7 @@ export default function TermsPage() {
             <h3>2. DEFINITIONS</h3>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>“Astrologer/Pandit”</strong> means an independent third-party astrologer, priest, purohit or spiritual consultant empanelled or listed on the Platform to render Services to Users.</li>
-              <li><strong>“Chadhava/Offering”</strong> means any devotional offering, prasad, or temple offering booked by a User through the Platform to be performed at a temple or by a Pandit on the User’s behalf.</li>
+              <li><strong>“Chadhava/Offering”</strong> means any devotional offering, or temple offering booked by a User through the Platform to be performed at a temple or by a Pandit on the User’s behalf.</li>
               <li><strong>“Kundli/Digital Report”</strong> means any computer-generated or astrologer-prepared horoscope, birth chart, numerology or matchmaking report delivered to the User in digital form.</li>
               <li><strong>“Puja”</strong> means any religious ritual or ceremony booked by a User through the Platform, whether performed individually (“Vyaktigat Puja”) or collectively with other devotees (“Samuhik Puja”).</li>
               <li><strong>“Spiritual Products”</strong> means physical products including but not limited to rudraksha, gemstones, crystals, yantras, bracelets, malas and other devotional or spiritual merchandise sold through the Platform.</li>

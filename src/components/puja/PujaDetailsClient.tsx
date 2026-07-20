@@ -60,7 +60,7 @@ const fallbackIndia = [
     features: [
       "Sankalp with 1 Name & Gotra",
       "Puja Video Clip via WhatsApp",
-      "Dry Fruits Prasad (100g) + Deity Photo"
+      "Dry Fruits (100g) + Deity Photo"
     ],
     tag: "Popular",
     tagColor: "bg-blue-600"
@@ -74,7 +74,7 @@ const fallbackIndia = [
     features: [
       "Sankalp with up to 4 Names & Gotras",
       "Full Puja Video Clip via WhatsApp",
-      "Aashirwad Box (Prasad, Kalava, Sindoor, Deity Photo)"
+      "Aashirwad Box (Kalava, Sindoor, Deity Photo)"
     ],
     tag: "Best Value",
     tagColor: "bg-[#FF7F3F]"
@@ -88,7 +88,7 @@ const fallbackIndia = [
     features: [
       "Maha Sankalp with Family Names & Gotras",
       "Detailed Video & Live Sankalp Photo",
-      "Maha Prasad Box (Prasad, Energized Yantra, Kalava, Janeu, Diya)"
+      "Aashirwad Box (Energized Yantra, Kalava, Janeu, Diya)"
     ],
     tag: "Recommended",
     tagColor: "bg-emerald-600"
@@ -104,7 +104,7 @@ const fallbackNri = [
     features: [
       "Sankalp with 1 Name & Gotra",
       "Puja Video Clip via WhatsApp",
-      "Dry Fruits Prasad (100g) + Deity Photo"
+      "Dry Fruits (100g) + Deity Photo"
     ],
     tag: "Popular",
     tagColor: "bg-blue-600"
@@ -117,7 +117,7 @@ const fallbackNri = [
     features: [
       "Sankalp with up to 4 Names & Gotras",
       "Full Puja Video Clip via WhatsApp",
-      "Aashirwad Box (Prasad, Kalava, Sindoor, Deity Photo)"
+      "Aashirwad Box (Kalava, Sindoor, Deity Photo)"
     ],
     tag: "Best Value",
     tagColor: "bg-[#FF7F3F]"
@@ -130,7 +130,7 @@ const fallbackNri = [
     features: [
       "Maha Sankalp with Family Names & Gotras",
       "Detailed Video & Live Sankalp Photo",
-      "Maha Prasad Box (Prasad, Energized Yantra, Kalava, Janeu, Diya)"
+      "Aashirwad Box (Energized Yantra, Kalava, Janeu, Diya)"
     ],
     tag: "Recommended",
     tagColor: "bg-emerald-600"
@@ -588,7 +588,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                   let icon = "✅";
                   if (inc.toLowerCase().includes("sankalp")) icon = "🙏";
                   else if (inc.toLowerCase().includes("video") || inc.toLowerCase().includes("whatsapp")) icon = "📱";
-                  else if (inc.toLowerCase().includes("prasad") || inc.toLowerCase().includes("delivery")) icon = "🎁";
+                  else if (inc.toLowerCase().includes("delivery")) icon = "🎁";
                   else if (inc.toLowerCase().includes("offering") || inc.toLowerCase().includes("flame")) icon = "🔥";
                   
                   return (
@@ -633,8 +633,8 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
             
             <div className="relative pl-8">
               <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[#FF7F3F] ring-4 ring-orange-100" />
-              <h3 className="font-bold text-gray-900 text-base md:text-lg">4. Prasad Delivery</h3>
-              <p className="text-gray-500 text-xs md:text-sm mt-1">Maha Prasad and energized sacred items (Aashirwad Box) will be shipped directly to your home.</p>
+              <h3 className="font-bold text-gray-900 text-base md:text-lg">4. Delivery</h3>
+              <p className="text-gray-500 text-xs md:text-sm mt-1">Energized sacred items (Aashirwad Box) will be shipped directly to your home.</p>
             </div>
           </div>
         </div>
@@ -724,7 +724,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                 location: "Delhi, India",
                 rating: 5,
                 date: "04 July 2026",
-                comment: "Highly satisfied with the booking. Got the video updates and the Prasad box arrived within a week. Very transparent and spiritual experience!"
+                comment: "Highly satisfied with the booking. Got the video updates and the Aashirwad box arrived within a week. Very transparent and spiritual experience!"
               },
               {
                 name: "Meera Patel",
@@ -738,7 +738,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                 location: "Mumbai, India",
                 rating: 5,
                 date: "15 June 2026",
-                comment: "Genuine and professional service. The packaging of the Prasad was premium, and the Pandit ji chanted our names and gotra very clearly in the video."
+                comment: "Genuine and professional service. The packaging of the box was premium, and the Pandit ji chanted our names and gotra very clearly in the video."
               }
             ].map((rev, index) => (
               <div key={index} className="bg-[#FFFDFB] p-6 rounded-2xl border border-orange-50/50 shadow-[0_4px_12px_rgba(0,0,0,0.01)] flex flex-col justify-between">
@@ -783,8 +783,8 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                 answer: "During booking checkout, you will need to provide the names, gotras, and specific wishes of the family members participating in the puja."
               },
               {
-                question: "When and how will I get the Prasad?",
-                answer: "Prasad (including dynamic dry fruits, deity photo, energized Kalava, and sacred elements) is packed securely and dispatched via courier. It reaches your address within 7-10 working days of the puja date."
+                question: "When and how will I get the Blessed Items?",
+                answer: "Blessed Items (including dynamic dry fruits, deity photo, energized Kalava, and sacred elements) are packed securely and dispatched via courier. They reach your address within 7-10 working days of the puja date."
               }
             ].map((faq, index) => {
               const isOpen = openFaqIndex === index;

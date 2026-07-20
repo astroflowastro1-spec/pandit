@@ -15,8 +15,8 @@ const faqs = [
     answer: "Absolutely. All our Pandits are highly verified, Vedic scholars with years of experience. We ensure every ritual strictly follows the authentic Shastras."
   },
   {
-    question: "How do I receive the Prasad?",
-    answer: "After the Puja is successfully completed, the consecrated Prasad is carefully packed and shipped directly to your registered address via our secure delivery partners within 5-7 business days."
+    question: "How do I receive the Blessed Items?",
+    answer: "After the Puja is successfully completed, the consecrated items are carefully packed and shipped directly to your registered address via our secure delivery partners within 5-7 business days."
   },
   {
     question: "Can I cancel or reschedule a booking?",

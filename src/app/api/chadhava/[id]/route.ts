@@ -149,7 +149,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         title: package1Title,
         price: indPrice,
         description: "",
-        features: ["Sankalp with 1 Name & Gotra", "Video Clip via WhatsApp", "Dry Fruits Prasad (100g) + Deity Photo"],
+        features: ["Sankalp with 1 Name & Gotra", "Video Clip via WhatsApp", "Dry Fruits (100g) + Deity Photo"],
         tag: "Popular",
         tagColor: "bg-blue-600",
         imageSrc: pkg1ImageSrc
@@ -169,7 +169,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         title: package3Title,
         price: familyPrice,
         description: "",
-        features: ["Maha Sankalp with up to 4 Names & Gotras", "Detailed Video & Live Photo", "Maha Prasad Box"],
+        features: ["Maha Sankalp with up to 4 Names & Gotras", "Detailed Video & Live Photo", "Aashirwad Box"],
         tag: "Recommended",
         tagColor: "bg-emerald-600",
         imageSrc: pkg3ImageSrc

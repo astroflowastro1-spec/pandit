@@ -15,7 +15,7 @@ const nriPackages = [
     features: [
       'Sankalp with 1 Name & Gotra',
       'Puja Video Clip via WhatsApp',
-      'Dry Fruits Prasad (100g) + Deity Photo'
+      'Dry Fruits (100g) + Deity Photo'
     ],
     tag: 'Popular',
     tagColor: 'bg-blue-600'
@@ -28,7 +28,7 @@ const nriPackages = [
     features: [
       'Sankalp with 2 Names & Gotra',
       'Full Puja Video Clip via WhatsApp',
-      'Aashirwad Box (Prasad, Kalava, Sindoor, Deity Photo)'
+      'Aashirwad Box (Kalava, Sindoor, Deity Photo)'
     ],
     tag: 'Best Value',
     tagColor: 'bg-[#FF7F3F]'
@@ -41,7 +41,7 @@ const nriPackages = [
     features: [
       'Maha Sankalp with up to 4 Names & Gotras',
       'Detailed Video & Live Sankalp Photo',
-      'Maha Prasad Box (Prasad, Energized Yantra, Kalava, Janeu, Diya)'
+      'Aashirwad Box (Energized Yantra, Kalava, Janeu, Diya)'
     ],
     tag: 'Recommended',
     tagColor: 'bg-emerald-600'

@@ -8,8 +8,8 @@ export default function HowItWorks({ type = "Puja" }: HowItWorksProps) {
   const steps = [
     { icon: "/members.webp", title: "Members & Gotra Details" },
     { icon: "/confirm.webp", title: `Confirm ${type} Booking` },
-    { icon: "/mantra.webp", title: `Mantra & ${type} Update` },
-    { icon: "/puja-video.webp", title: `${type} Video & Prasad` },
+    { icon: "/mantra.webp", title: `${type} Update` },
+    { icon: "/puja-video.webp", title: `${type} Video` },
   ];
 
   return (

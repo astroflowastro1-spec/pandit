@@ -67,7 +67,7 @@ async function run() {
       "Sankalp performed with your name and gotra",
       "Puja and offering performed before the sacred flame",
       "Puja video shared on WhatsApp",
-      "Prasad box delivered to your address"
+      "Blessed items box delivered to your address"
     ];
 
     puja.packages = {
@@ -82,7 +82,7 @@ async function run() {
             "Sankalp with 1 Name & Gotra",
             "Offering before the Sacred Flame",
             "Puja video shared on WhatsApp",
-            "Prasad delivered to your home"
+            "Blessed items delivered to your home"
           ]
         },
         {
@@ -95,7 +95,7 @@ async function run() {
             "Sankalp with 2 Names & Gotra",
             "Offering before the Sacred Flame",
             "Puja video shared on WhatsApp",
-            "Prasad delivered to your home"
+            "Blessed items delivered to your home"
           ]
         },
         {
@@ -108,7 +108,7 @@ async function run() {
             "Sankalp with up to 4 Names & Gotras",
             "Offering before the Sacred Flame",
             "Full Puja video shared on WhatsApp",
-            "Special Prasad Box delivered to your home"
+            "Special Aashirwad Box delivered to your home"
           ]
         }
       ],

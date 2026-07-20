@@ -102,8 +102,8 @@ export default function SuccessPage() {
                   <FiTruck size={20} />
                 </div>
                 <div className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                  <h3 className="font-bold text-gray-900 mb-1">Prasad Delivery</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">The energized Prasad will be carefully packed and shipped directly to your home address.</p>
+                  <h3 className="font-bold text-gray-900 mb-1">Delivery</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">The energized items will be carefully packed and shipped directly to your home address.</p>
                 </div>
               </motion.div>
 
