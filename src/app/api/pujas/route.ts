@@ -105,7 +105,7 @@ export async function POST(request: Request) {
         title: "Individual Puja",
         price: indPrice,
         description: "Puja will be performed with your Name and Gotra. Video recording of Sankalp & Havan will be shared.",
-        features: ["Sankalp with 1 Name & Gotra", "Puja Video Clip via WhatsApp", "Dry Fruits (100g) + Deity Photo"],
+        features: ["Sankalp with 1 Name & Gotra", "Puja Video Clip via WhatsApp"],
         tag: "Popular",
         tagColor: "bg-blue-600"
       },
@@ -113,8 +113,8 @@ export async function POST(request: Request) {
         id: "couple",
         title: "Couple Puja",
         price: couplePrice,
-        description: "Puja performed for Husband and Wife. Detailed Sankalp with both names. Premium Aashirwad Box sent to your home.",
-        features: ["Sankalp with 2 Names & Gotra", "Full Puja Video Clip via WhatsApp", "Aashirwad Box (Kalava, Sindoor, Deity Photo)"],
+        description: "Puja performed for Husband and Wife. Detailed Sankalp with both names.",
+        features: ["Sankalp with 2 Names & Gotra", "Full Puja Video Clip via WhatsApp"],
         tag: "Best Value",
         tagColor: "bg-[#FF7F3F]"
       },
@@ -122,8 +122,8 @@ export async function POST(request: Request) {
         id: "family",
         title: "Family Puja (Up to 4 Members)",
         price: familyPrice,
-        description: "Special Havan performed for health, wealth & protection of the entire family. Ultimate Aashirwad Box sent.",
-        features: ["Maha Sankalp with up to 4 Names & Gotras", "Detailed Video & Live Sankalp Photo", "Aashirwad Box (Energized Yantra, Kalava, Janeu, Diya)"],
+        description: "Special Havan performed for health, wealth & protection of the entire family.",
+        features: ["Maha Sankalp with up to 4 Names & Gotras", "Detailed Video & Live Sankalp Photo"],
         tag: "Recommended",
         tagColor: "bg-emerald-600"
       }

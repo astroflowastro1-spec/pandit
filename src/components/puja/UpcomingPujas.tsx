@@ -48,7 +48,7 @@ export default function UpcomingPujas() {
             Upcoming Online Pujas
           </h2>
           <p className="text-gray-700 text-[17px] max-w-5xl mb-8">
-            Book puja online with your name and gotra, receive the puja video along with the Aashirwad Box, and gain blessings from the Divine.
+            Book puja online with your name and gotra, receive the puja video, and gain blessings from the Divine.
           </p>
         </div>
 

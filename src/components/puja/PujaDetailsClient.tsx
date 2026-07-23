@@ -60,8 +60,7 @@ const fallbackIndia = [
     description: "Puja will be performed with your Name and Gotra. Video recording of Sankalp & Havan will be shared.",
     features: [
       "Sankalp with 1 Name & Gotra",
-      "Puja Video Clip via WhatsApp",
-      "Dry Fruits (100g) + Deity Photo"
+      "Puja Video Clip via WhatsApp"
     ],
     tag: "Popular",
     tagColor: "bg-blue-600"
@@ -71,11 +70,10 @@ const fallbackIndia = [
     title: "Family Puja (Up to 4 Members)",
     price: 1501,
     originalPrice: 2500,
-    description: "Puja performed for the entire family. Detailed Sankalp with all names. Premium Aashirwad Box sent to your home.",
+    description: "Puja performed for the entire family. Detailed Sankalp with all names.",
     features: [
       "Sankalp with up to 4 Names & Gotras",
-      "Full Puja Video Clip via WhatsApp",
-      "Aashirwad Box (Kalava, Sindoor, Deity Photo)"
+      "Full Puja Video Clip via WhatsApp"
     ],
     tag: "Best Value",
     tagColor: "bg-[#FF7F3F]"
@@ -85,11 +83,10 @@ const fallbackIndia = [
     title: "Special Maha Havan (Joint)",
     price: 2501,
     originalPrice: 4500,
-    description: "Special Havan performed for health, wealth & protection from evil eye. Ultimate Aashirwad Box + energized Yantra.",
+    description: "Special Havan performed for health, wealth & protection from evil eye.",
     features: [
       "Maha Sankalp with Family Names & Gotras",
-      "Detailed Video & Live Sankalp Photo",
-      "Aashirwad Box (Energized Yantra, Kalava, Janeu, Diya)"
+      "Detailed Video & Live Sankalp Photo"
     ],
     tag: "Recommended",
     tagColor: "bg-emerald-600"
@@ -104,8 +101,7 @@ const fallbackNri = [
     description: "Puja will be performed with your Name and Gotra. Video recording of Sankalp & Havan will be shared.",
     features: [
       "Sankalp with 1 Name & Gotra",
-      "Puja Video Clip via WhatsApp",
-      "Dry Fruits (100g) + Deity Photo"
+      "Puja Video Clip via WhatsApp"
     ],
     tag: "Popular",
     tagColor: "bg-blue-600"
@@ -114,11 +110,10 @@ const fallbackNri = [
     id: "family",
     title: "Family Puja (Up to 4 Members)",
     price: 1100,
-    description: "Puja performed for the entire family. Detailed Sankalp with all names. Premium Aashirwad Box sent to your home.",
+    description: "Puja performed for the entire family. Detailed Sankalp with all names.",
     features: [
       "Sankalp with up to 4 Names & Gotras",
-      "Full Puja Video Clip via WhatsApp",
-      "Aashirwad Box (Kalava, Sindoor, Deity Photo)"
+      "Full Puja Video Clip via WhatsApp"
     ],
     tag: "Best Value",
     tagColor: "bg-[#FF7F3F]"
@@ -127,11 +122,10 @@ const fallbackNri = [
     id: "havan",
     title: "Special Maha Havan (Joint)",
     price: 2100,
-    description: "Special Havan performed for health, wealth & protection from evil eye. Ultimate Aashirwad Box + energized Yantra.",
+    description: "Special Havan performed for health, wealth & protection from evil eye.",
     features: [
       "Maha Sankalp with Family Names & Gotras",
-      "Detailed Video & Live Sankalp Photo",
-      "Aashirwad Box (Energized Yantra, Kalava, Janeu, Diya)"
+      "Detailed Video & Live Sankalp Photo"
     ],
     tag: "Recommended",
     tagColor: "bg-emerald-600"
@@ -637,7 +631,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
             <div className="relative pl-8">
               <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[#FF7F3F] ring-4 ring-orange-100" />
               <h3 className="font-bold text-gray-900 text-base md:text-lg">4. Delivery</h3>
-              <p className="text-gray-500 text-xs md:text-sm mt-1">Energized sacred items (Aashirwad Box) will be shipped directly to your home.</p>
+              <p className="text-gray-500 text-xs md:text-sm mt-1">Puja videos and details will be shared on WhatsApp.</p>
             </div>
           </div>
         </div>
@@ -729,7 +723,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                 location: "Delhi, India",
                 rating: 5,
                 date: "04 July 2026",
-                comment: "Highly satisfied with the booking. Got the video updates and the Aashirwad box arrived within a week. Very transparent and spiritual experience!"
+                comment: "Highly satisfied with the booking. Got the video updates and the experience was very transparent and spiritual!"
               },
               {
                 name: "Meera Patel",
@@ -789,7 +783,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
               },
               {
                 question: "When and how will I get the Blessed Items?",
-                answer: "Blessed Items (including dynamic dry fruits, deity photo, energized Kalava, and sacred elements) are packed securely and dispatched via courier. They reach your address within 7-10 working days of the puja date."
+                answer: "You will receive the complete video of your sankalp and puja on your registered WhatsApp number."
               }
             ].map((faq, index) => {
               const isOpen = openFaqIndex === index;

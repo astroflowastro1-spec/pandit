@@ -48,7 +48,7 @@ export default function ChadhavaClient() {
             Sacred Chadhava
           </h2>
           <p className="text-gray-700 text-[17px] max-w-5xl mb-8">
-            Book Chadhava online with your name and gotra, receive the Chadhava video along with the Aashirwad Box, and gain blessings from the Divine.
+            Book Chadhava online with your name and gotra, receive the Chadhava video, and gain blessings from the Divine.
           </p>
         </div>
 
