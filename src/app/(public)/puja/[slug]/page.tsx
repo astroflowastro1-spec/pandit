@@ -50,6 +50,7 @@ export default async function PujaDetailsPage({ params }: { params: Promise<{ sl
     packages: rawPuja.packages ? JSON.parse(JSON.stringify(rawPuja.packages)) : null,
     badge: rawPuja.badge || "",
     badgeColor: rawPuja.badgeColor || "bg-[#F3912E]",
+    isActive: rawPuja.isActive !== undefined ? rawPuja.isActive : true,
   };
 
   return <PujaDetailsClient puja={puja} />;

@@ -50,6 +50,27 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleToggleActive = async (id: string, currentStatus: boolean) => {
+    try {
+      const res = await fetch(`/api/pujas/${id}/toggle`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ isActive: !currentStatus }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPujas(pujas.map((p) => (p._id === id ? { ...p, isActive: !currentStatus } : p)));
+      } else {
+        alert("Failed to toggle status");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error toggling status");
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
@@ -131,8 +152,26 @@ export default function AdminDashboard() {
                              </td>
                             <td className="px-6 py-4 text-gray-600 text-sm">{puja.location}</td>
                             <td className="px-6 py-4 text-gray-600 text-sm">{puja.date}</td>
-                            <td className="px-6 py-4">
-                              <Link href={`/admin/edit-puja/${puja._id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            <td className="px-6 py-4 flex items-center gap-2">
+                              <button
+                                onClick={() => handleToggleActive(puja._id, puja.isActive !== false)}
+                                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
+                                  puja.isActive !== false ? "bg-green-500" : "bg-gray-300 hover:bg-gray-400"
+                                }`}
+                                role="switch"
+                                aria-checked={puja.isActive !== false}
+                              >
+                                <span className="sr-only">Toggle active status</span>
+                                <span
+                                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                                    puja.isActive !== false ? "translate-x-5" : "translate-x-0"
+                                  }`}
+                                />
+                              </button>
+                              <span className={`text-xs font-bold w-12 ${puja.isActive !== false ? "text-green-600" : "text-gray-500"}`}>
+                                {puja.isActive !== false ? "Active" : "Inactive"}
+                              </span>
+                              <Link href={`/admin/edit-puja/${puja._id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium ml-2">
                                 Edit
                               </Link>
                             </td>

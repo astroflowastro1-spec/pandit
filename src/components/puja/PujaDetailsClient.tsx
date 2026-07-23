@@ -47,6 +47,7 @@ interface PujaDetailsClientProps {
     } | null;
     badge?: string;
     badgeColor?: string;
+    isActive?: boolean;
   };
 }
 
@@ -451,12 +452,14 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
             </p>
 
             {/* Participate Button - Shopify Green matching screenshot */}
-            <button 
-              onClick={() => setIsPackagePopupOpen(true)}
-              className="w-full bg-[#008060] hover:bg-[#00664d] text-white text-[15px] font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99]"
-            >
-              Select puja package <span className="text-lg leading-none">→</span>
-            </button>
+            {puja.isActive !== false && (
+              <button 
+                onClick={() => setIsPackagePopupOpen(true)}
+                className="w-full bg-[#008060] hover:bg-[#00664d] text-white text-[15px] font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99]"
+              >
+                Select puja package <span className="text-lg leading-none">→</span>
+              </button>
+            )}
 
           </div>
 
@@ -697,15 +700,17 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                   </div>
                 </div>
 
-                <button 
-                  onClick={() => {
-                    setSelectedPkg(pkg);
-                    setIsDetailsPopupOpen(true);
-                  }}
-                  className="w-full mt-8 bg-[#117B50] hover:bg-[#0D6240] text-white text-xs font-bold tracking-widest uppercase py-3.5 rounded-xl transition-all shadow-sm"
-                >
-                  Proceed to Book
-                </button>
+                {puja.isActive !== false && (
+                  <button 
+                    onClick={() => {
+                      setSelectedPkg(pkg);
+                      setIsDetailsPopupOpen(true);
+                    }}
+                    className="w-full mt-8 bg-[#117B50] hover:bg-[#0D6240] text-white text-xs font-bold tracking-widest uppercase py-3.5 rounded-xl transition-all shadow-sm"
+                  >
+                    Proceed to Book
+                  </button>
+                )}
               </div>
             ))}
           </div>

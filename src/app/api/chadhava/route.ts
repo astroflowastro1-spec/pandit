@@ -7,7 +7,7 @@ import path from 'path';
 export async function GET() {
   try {
     await dbConnect();
-    const items = await Chadhava.find({}).sort({ order: 1, createdAt: 1 });
+    const items = await Chadhava.find({}).sort({ order: 1, createdAt: 1 }).lean();
     return NextResponse.json({ success: true, data: items });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch chadhava items' }, { status: 500 });
@@ -31,6 +31,7 @@ export async function POST(request: Request) {
     const subtitle = (formData.get("subtitle") as string) || "";
     const whyThisPuja = (formData.get("whyThisPuja") as string) || "";
     const aboutTemple = (formData.get("aboutTemple") as string) || "";
+    const isActive = formData.get("isActive") !== "false";
     const benefitsStr = (formData.get("benefits") || "") as string;
     const inclusionsStr = (formData.get("inclusions") || "") as string;
     
@@ -202,6 +203,7 @@ export async function POST(request: Request) {
       benefits,
       inclusions,
       packages,
+      isActive,
     });
     
     return NextResponse.json({ success: true, data: item }, { status: 201 });

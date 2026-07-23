@@ -7,7 +7,7 @@ import path from 'path';
 export async function GET() {
   try {
     await dbConnect();
-    const products = await Product.find({}).sort({ order: 1, createdAt: -1 });
+    const products = await Product.find({}).sort({ order: 1, createdAt: -1 }).lean();
     return NextResponse.json({ success: true, data: products });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch products' }, { status: 500 });

@@ -50,6 +50,7 @@ export default async function ChadhavaDetailsPage({ params }: { params: Promise<
     packages: rawChadhava.packages ? JSON.parse(JSON.stringify(rawChadhava.packages)) : null,
     badge: rawChadhava.badge || "",
     badgeColor: rawChadhava.badgeColor || "bg-[#F3912E]",
+    isActive: rawChadhava.isActive !== undefined ? rawChadhava.isActive : true,
   };
 
   return <ChadhavaDetailsClient Chadhava={chadhavaData} />;

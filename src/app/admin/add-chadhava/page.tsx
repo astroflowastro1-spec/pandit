@@ -28,6 +28,7 @@ export default function AddChadhavaPage() {
     nriIndividualPrice: "501",
     nriCouplePrice: "1100",
     nriFamilyPrice: "2100",
+    isActive: true,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -42,7 +43,8 @@ export default function AddChadhavaPage() {
   const [templeImagePreview, setTempleImagePreview] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value = e.target.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -268,6 +270,22 @@ export default function AddChadhavaPage() {
               <option value="bg-green-600">Green</option>
               <option value="bg-blue-600">Blue</option>
             </select>
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="flex items-center gap-3 cursor-pointer p-4 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+              <input
+                type="checkbox"
+                name="isActive"
+                checked={formData.isActive}
+                onChange={handleChange}
+                className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
+              />
+              <div className="flex flex-col">
+                <span className="text-base font-bold text-gray-900">Status (Active?)</span>
+                <span className="text-sm text-gray-500">If unchecked, this chadhava cannot be booked.</span>
+              </div>
+            </label>
           </div>
           
           <div className="md:col-span-2 pt-4 border-t border-gray-100">

@@ -48,6 +48,7 @@ interface ChadhavaDetailsClientProps {
     } | null;
     badge?: string;
     badgeColor?: string;
+    isActive?: boolean;
   };
 }
 
@@ -512,12 +513,14 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
             </p>
 
             {/* Participate Button - Shopify Green matching screenshot */}
-            <button 
-              onClick={() => setIsPackagePopupOpen(true)}
-              className="w-full bg-[#008060] hover:bg-[#00664d] text-white text-[15px] font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99]"
-            >
-              Choose an offering <span className="text-lg leading-none"> </span>
-            </button>
+            {Chadhava.isActive !== false && (
+              <button 
+                onClick={() => setIsPackagePopupOpen(true)}
+                className="w-full bg-[#008060] hover:bg-[#00664d] text-white text-[15px] font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99]"
+              >
+                Choose an offering <span className="text-lg leading-none"> </span>
+              </button>
+            )}
 
           </div>
 
@@ -744,19 +747,21 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                       className="object-cover opacity-90"
                     />
                   </div>
-                  {cartItems[pkg.id] > 0 ? (
-                    <div className="w-full bg-[#117B50] text-white text-[13px] font-bold py-1.5 px-4 rounded-lg flex items-center justify-between">
-                      <button onClick={() => handleUpdateQuantity(pkg.id, -1)} className="px-2 hover:bg-[#0D6240] rounded">-</button>
-                      <span>{cartItems[pkg.id]}</span>
-                      <button onClick={() => handleUpdateQuantity(pkg.id, 1)} className="px-2 hover:bg-[#0D6240] rounded">+</button>
-                    </div>
-                  ) : (
-                    <button 
-                      onClick={() => handleUpdateQuantity(pkg.id, 1)}
-                      className="w-full bg-white text-[#117B50] hover:bg-[#117B50] hover:text-white border border-[#117B50] text-[13px] font-bold py-1.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-1.5"
-                    >
-                      <span>+</span> Add
-                    </button>
+                  {Chadhava.isActive !== false && (
+                    cartItems[pkg.id] > 0 ? (
+                      <div className="w-full bg-[#117B50] text-white text-[13px] font-bold py-1.5 px-4 rounded-lg flex items-center justify-between">
+                        <button onClick={() => handleUpdateQuantity(pkg.id, -1)} className="px-2 hover:bg-[#0D6240] rounded">-</button>
+                        <span>{cartItems[pkg.id]}</span>
+                        <button onClick={() => handleUpdateQuantity(pkg.id, 1)} className="px-2 hover:bg-[#0D6240] rounded">+</button>
+                      </div>
+                    ) : (
+                      <button 
+                        onClick={() => handleUpdateQuantity(pkg.id, 1)}
+                        className="w-full bg-white text-[#117B50] hover:bg-[#117B50] hover:text-white border border-[#117B50] text-[13px] font-bold py-1.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        <span>+</span> Add
+                      </button>
+                    )
                   )}
                 </div>
               </div>

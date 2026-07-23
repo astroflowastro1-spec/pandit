@@ -20,6 +20,7 @@ export interface IChadhava extends Document {
   benefits?: string[];
   inclusions?: string[];
   packages?: any;
+  isActive: boolean;
 }
 
 const ChadhavaSchema: Schema = new Schema({
@@ -42,6 +43,7 @@ const ChadhavaSchema: Schema = new Schema({
   benefits: { type: [String], default: [] },
   inclusions: { type: [String], default: [] },
   packages: { type: Schema.Types.Mixed, default: null },
+  isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
 if (mongoose.models.Chadhava) {

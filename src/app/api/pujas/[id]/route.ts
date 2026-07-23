@@ -7,7 +7,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   try {
     await dbConnect();
     const { id } = await params;
-    const puja = await Puja.findById(id);
+    const puja = await Puja.findById(id).lean();
     if (!puja) {
       return NextResponse.json({ success: false, error: 'Puja not found' }, { status: 404 });
     }
@@ -35,6 +35,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const subtitle = (formData.get("subtitle") as string) || "";
     const whyThisPuja = (formData.get("whyThisPuja") as string) || "";
     const aboutTemple = (formData.get("aboutTemple") as string) || "";
+    
+    // Convert "false" string to boolean false, otherwise true
+    const isActive = formData.get("isActive") !== "false";
     const benefitsStr = (formData.get("benefits") || "") as string;
     const inclusionsStr = (formData.get("inclusions") || "") as string;
     
@@ -166,6 +169,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         benefits,
         inclusions,
         packages,
+        isActive,
       },
       { new: true }
     );

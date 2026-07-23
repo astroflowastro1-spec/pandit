@@ -36,6 +36,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const subtitle = (formData.get("subtitle") as string) || "";
     const whyThisChadhava = (formData.get("whyThisChadhava") as string) || "";
     const aboutTemple = (formData.get("aboutTemple") as string) || "";
+    const isActive = formData.get("isActive") !== "false";
     const benefitsStr = (formData.get("benefits") || "") as string;
     const inclusionsStr = (formData.get("inclusions") || "") as string;
     
@@ -201,6 +202,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         benefits,
         inclusions,
         packages,
+        isActive,
       },
       { new: true }
     );
