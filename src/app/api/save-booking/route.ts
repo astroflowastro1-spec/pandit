@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
       // Handle Affiliate Commission
       try {
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const affiliateCode = cookieStore.get('pndit_ref')?.value;
 
         if (affiliateCode) {
