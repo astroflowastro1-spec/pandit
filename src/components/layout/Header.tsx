@@ -25,7 +25,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <div className="relative h-10 w-40">
-            <Image src="/logo.avif" alt="Mere Pandit Ji" fill sizes="160px" className="object-contain object-left" priority />
+            <Image src="/logo.avif" alt="Mere Pandit Ji" fill sizes="160px" className="object-contain object-left" priority loading="eager" />
           </div>
         </Link>
 
@@ -68,7 +68,7 @@ export default function Header() {
           <div className="flex items-center justify-between p-4 border-b border-gray-100 h-[72px]">
             <div className="flex items-center">
               <div className="relative h-10 w-40">
-                <Image src="/logo.avif" alt="Mere Pandit Ji" fill sizes="160px" className="object-contain object-left" priority />
+                <Image src="/logo.avif" alt="Mere Pandit Ji" fill sizes="160px" className="object-contain object-left" priority loading="eager" />
               </div>
             </div>
             <button

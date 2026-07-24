@@ -28,6 +28,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${outfit.variable} ${playfair.variable} scroll-smooth`}
+      data-scroll-behavior="smooth"
     >
       <head>
         <Script id="meta-pixel" strategy="afterInteractive">

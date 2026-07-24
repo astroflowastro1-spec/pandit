@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FiHome, FiPlusSquare, FiList, FiLogOut, FiPackage } from "react-icons/fi";
+import { FiHome, FiPlusSquare, FiList, FiLogOut, FiPackage, FiUsers, FiDollarSign } from "react-icons/fi";
 
 export default function AdminLayout({
   children,
@@ -64,7 +64,31 @@ export default function AdminLayout({
             }`}
           >
             <FiList className="text-lg" />
-            All Chadhava
+            Manage Chadhavas
+          </Link>
+
+          <Link
+            href="/admin/affiliates"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors mt-4 border-t pt-6 border-gray-100 ${
+              pathname === "/admin/affiliates"
+                ? "bg-green-50 text-green-700"
+                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+            }`}
+          >
+            <FiUsers className="text-lg" />
+            Affiliates
+          </Link>
+
+          <Link
+            href="/admin/payouts"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
+              pathname === "/admin/payouts"
+                ? "bg-green-50 text-green-700"
+                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+            }`}
+          >
+            <FiDollarSign className="text-lg" />
+            Payout Requests
           </Link>
           <Link
             href="/admin/add-chadhava"

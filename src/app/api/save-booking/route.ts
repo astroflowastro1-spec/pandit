@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { Booking } from '@/models/Booking';
+import { Affiliate } from '@/models/Affiliate';
+import { EarningRecord } from '@/models/EarningRecord';
 import crypto from 'crypto';
+import { cookies } from 'next/headers';
 import { sendWhatsAppConfirmation } from '@/services/aisensy';
 
 export async function POST(req: Request) {
@@ -55,6 +58,41 @@ export async function POST(req: Request) {
       await newBooking.save();
       console.log("Successfully saved booking to MongoDB:", newBooking._id);
       isSaved = true;
+
+      // Handle Affiliate Commission
+      try {
+        const cookieStore = cookies();
+        const affiliateCode = cookieStore.get('pndit_ref')?.value;
+
+        if (affiliateCode) {
+          const affiliate = await Affiliate.findOne({ affiliateCode, status: 'Active' });
+          if (affiliate) {
+            let commissionAmount = 0;
+            if (affiliate.commissionConfig.commissionType === 'PERCENTAGE') {
+              commissionAmount = (Number(data.packagePrice) * affiliate.commissionConfig.value) / 100;
+            } else {
+              commissionAmount = affiliate.commissionConfig.value;
+            }
+
+            if (commissionAmount > 0) {
+              const earning = new EarningRecord({
+                affiliateId: affiliate._id,
+                bookingId: newBooking._id,
+                amount: commissionAmount,
+                status: 'PENDING'
+              });
+              await earning.save();
+
+              // Update wallet balance
+              affiliate.walletBalance += commissionAmount;
+              await affiliate.save();
+              console.log("Commission awarded to affiliate:", affiliateCode);
+            }
+          }
+        }
+      } catch (affiliateError) {
+        console.error("Error processing affiliate commission:", affiliateError);
+      }
     } catch (dbError) {
       console.error("Error saving booking to MongoDB:", dbError);
       // We don't block the execution since we also have the webhook.

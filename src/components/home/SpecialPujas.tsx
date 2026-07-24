@@ -45,7 +45,8 @@ const pujas = [
   }
 ];
 
-export default function SpecialPujas() {
+export default function SpecialPujas({ dynamicPujas }: { dynamicPujas?: any[] }) {
+  const displayPujas = dynamicPujas && dynamicPujas.length > 0 ? dynamicPujas : pujas;
   return (
     <section className="w-full pt-16 pb-6 bg-white flex flex-col items-center">
       <div className="container mx-auto px-6 md:px-12 lg:px-24">
@@ -77,7 +78,7 @@ export default function SpecialPujas() {
           }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
         >
-          {pujas.map((puja) => (
+          {displayPujas.map((puja) => (
             <motion.div 
               key={puja.id} 
               variants={{

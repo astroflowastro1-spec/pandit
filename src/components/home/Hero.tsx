@@ -81,7 +81,7 @@ export default function Hero() {
               src={slide.mobileImageSrc} 
               alt={`Banner ${index + 1} Mobile`} 
               fill
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover object-center block md:hidden"
               priority={index === 0}
             />

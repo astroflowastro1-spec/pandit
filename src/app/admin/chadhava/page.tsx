@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiPlus, FiMove } from "react-icons/fi";
+import { FiPlus, FiMove, FiTrash2 } from "react-icons/fi";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 
 export default function AdminDashboard() {
@@ -68,6 +68,22 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error(err);
       alert("Error toggling status");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this Chadhava? This action cannot be undone.")) return;
+    try {
+      const res = await fetch(`/api/chadhava/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        setChadhavas(Chadhavas.filter(c => c._id !== id));
+      } else {
+        alert("Failed to delete Chadhava");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting Chadhava");
     }
   };
 
@@ -161,9 +177,16 @@ export default function AdminDashboard() {
                               <span className={`text-xs font-bold w-12 ${Chadhava.isActive !== false ? "text-green-600" : "text-gray-500"}`}>
                                 {Chadhava.isActive !== false ? "Active" : "Inactive"}
                               </span>
-                              <Link href={`/admin/edit-chadhava/${Chadhava._id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium ml-2">
+                              <Link href={`/admin/edit-chadhava/${Chadhava._id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium ml-2 transition-colors">
                                 Edit
                               </Link>
+                              <button 
+                                onClick={() => handleDelete(Chadhava._id)} 
+                                className="text-red-500 hover:text-red-700 p-1.5 rounded-md hover:bg-red-50 transition-colors ml-2"
+                                title="Delete Chadhava"
+                              >
+                                <FiTrash2 />
+                              </button>
                             </td>
                           </tr>
                         )}
