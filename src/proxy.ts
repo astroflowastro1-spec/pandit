@@ -32,7 +32,7 @@ export function proxy(req: NextRequest) {
             ref,
             url: pathname,
             userAgent: req.headers.get('user-agent') || '',
-            ip: req.headers.get('x-forwarded-for') || req.ip || ''
+            ip: req.headers.get('x-forwarded-for') || ''
           })
         }).catch(e => console.error("Click tracking fetch error", e));
       }
