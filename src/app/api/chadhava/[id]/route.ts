@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { Chadhava } from '@/models/Chadhava';
-import { writeFile, unlink } from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -55,48 +54,28 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
 
     let imageSrc = existingChadhava.imageSrc; // keep existing by default
-
-    // If a new image is uploaded
-    if (image && image.name && image.size > 0) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      
-      const uniqueName = Date.now() + '-' + image.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      
-      await writeFile(uploadPath, buffer);
-      imageSrc = `/uploads/${uniqueName}`;
-    }
-
     let templeImageSrc = existingChadhava.templeImageSrc || "";
-    if (templeImage && templeImage.name && templeImage.size > 0) {
-      const bytes = await templeImage.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-temple-' + templeImage.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      templeImageSrc = `/uploads/${uniqueName}`;
-    }
-
     let sliderImage1Src = existingChadhava.sliderImage1Src || "";
-    if (sliderImage1 && sliderImage1.name && sliderImage1.size > 0) {
-      const bytes = await sliderImage1.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-slider1-' + sliderImage1.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      sliderImage1Src = `/uploads/${uniqueName}`;
-    }
-
     let sliderImage2Src = existingChadhava.sliderImage2Src || "";
-    if (sliderImage2 && sliderImage2.name && sliderImage2.size > 0) {
-      const bytes = await sliderImage2.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-slider2-' + sliderImage2.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      sliderImage2Src = `/uploads/${uniqueName}`;
-    }
+    let pkg1ImageSrc = existingChadhava.packages?.india?.[0]?.imageSrc || "";
+    let pkg2ImageSrc = existingChadhava.packages?.india?.[1]?.imageSrc || "";
+    let pkg3ImageSrc = existingChadhava.packages?.india?.[2]?.imageSrc || "";
+
+    const uploadTasks: Promise<void>[] = [];
+
+    const processUpload = async (file: File | null, assignUrl: (url: string) => void) => {
+      if (file && file.name && file.size > 0) {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const url = await uploadToCloudinary(buffer);
+        assignUrl(url);
+      }
+    };
+
+    uploadTasks.push(processUpload(image, (url) => { imageSrc = url; }));
+    uploadTasks.push(processUpload(templeImage, (url) => { templeImageSrc = url; }));
+    uploadTasks.push(processUpload(sliderImage1, (url) => { sliderImage1Src = url; }));
+    uploadTasks.push(processUpload(sliderImage2, (url) => { sliderImage2Src = url; }));
 
     // Determine slug (only update if title changed and it's fundamentally different)
     // For safety, we can just keep the old slug, or generate a new one if it's explicitly needed.
@@ -117,32 +96,16 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const nriCouplePrice = Number(formData.get("nriCouplePrice")) || 1100;
     const nriFamilyPrice = Number(formData.get("nriFamilyPrice")) || 2100;
 
-    let pkg1ImageSrc = existingChadhava.packages?.india?.[0]?.imageSrc || "";
     const p1Img = formData.get("package1Image") as File | null;
-    if (p1Img && p1Img.size > 0) {
-      const bytes = await p1Img.arrayBuffer();
-      const uniqueName = Date.now() + '-p1-' + p1Img.name.replace(/\s+/g, '-');
-      await writeFile(path.join(process.cwd(), "public", "uploads", uniqueName), Buffer.from(bytes));
-      pkg1ImageSrc = `/uploads/${uniqueName}`;
-    }
+    uploadTasks.push(processUpload(p1Img, (url) => { pkg1ImageSrc = url; }));
 
-    let pkg2ImageSrc = existingChadhava.packages?.india?.[1]?.imageSrc || "";
     const p2Img = formData.get("package2Image") as File | null;
-    if (p2Img && p2Img.size > 0) {
-      const bytes = await p2Img.arrayBuffer();
-      const uniqueName = Date.now() + '-p2-' + p2Img.name.replace(/\s+/g, '-');
-      await writeFile(path.join(process.cwd(), "public", "uploads", uniqueName), Buffer.from(bytes));
-      pkg2ImageSrc = `/uploads/${uniqueName}`;
-    }
+    uploadTasks.push(processUpload(p2Img, (url) => { pkg2ImageSrc = url; }));
 
-    let pkg3ImageSrc = existingChadhava.packages?.india?.[2]?.imageSrc || "";
     const p3Img = formData.get("package3Image") as File | null;
-    if (p3Img && p3Img.size > 0) {
-      const bytes = await p3Img.arrayBuffer();
-      const uniqueName = Date.now() + '-p3-' + p3Img.name.replace(/\s+/g, '-');
-      await writeFile(path.join(process.cwd(), "public", "uploads", uniqueName), Buffer.from(bytes));
-      pkg3ImageSrc = `/uploads/${uniqueName}`;
-    }
+    uploadTasks.push(processUpload(p3Img, (url) => { pkg3ImageSrc = url; }));
+
+    await Promise.all(uploadTasks);
 
     const buildPackageList = (indPrice: number, couplePrice: number, familyPrice: number) => ([
       {

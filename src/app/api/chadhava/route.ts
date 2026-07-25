@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { Chadhava } from '@/models/Chadhava';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function GET() {
   try {
@@ -48,45 +47,25 @@ export async function POST(request: Request) {
     let sliderImage1Src = "";
     let sliderImage2Src = "";
 
-    if (image && image.name) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      
-      const uniqueName = Date.now() + '-' + image.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      
-      await writeFile(uploadPath, buffer);
-      imageSrc = `/uploads/${uniqueName}`;
-    } else {
+    if (!image || !image.name) {
       return NextResponse.json({ success: false, error: 'Image is required' }, { status: 400 });
     }
 
-    if (templeImage && templeImage.name) {
-      const bytes = await templeImage.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-temple-' + templeImage.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      templeImageSrc = `/uploads/${uniqueName}`;
-    }
+    const uploadTasks: Promise<void>[] = [];
 
-    if (sliderImage1 && sliderImage1.name) {
-      const bytes = await sliderImage1.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-slider1-' + sliderImage1.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      sliderImage1Src = `/uploads/${uniqueName}`;
-    }
+    const processUpload = async (file: File | null, assignUrl: (url: string) => void) => {
+      if (file && file.name && file.size > 0) {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const url = await uploadToCloudinary(buffer);
+        assignUrl(url);
+      }
+    };
 
-    if (sliderImage2 && sliderImage2.name) {
-      const bytes = await sliderImage2.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const uniqueName = Date.now() + '-slider2-' + sliderImage2.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      await writeFile(uploadPath, buffer);
-      sliderImage2Src = `/uploads/${uniqueName}`;
-    }
+    uploadTasks.push(processUpload(image, (url) => { imageSrc = url; }));
+    uploadTasks.push(processUpload(templeImage, (url) => { templeImageSrc = url; }));
+    uploadTasks.push(processUpload(sliderImage1, (url) => { sliderImage1Src = url; }));
+    uploadTasks.push(processUpload(sliderImage2, (url) => { sliderImage2Src = url; }));
 
     const generateSlug = (text: string) => {
       return text
@@ -121,30 +100,17 @@ export async function POST(request: Request) {
 
     let pkg1ImageSrc = "";
     const p1Img = formData.get("package1Image") as File | null;
-    if (p1Img && p1Img.size > 0) {
-      const bytes = await p1Img.arrayBuffer();
-      const uniqueName = Date.now() + '-p1-' + p1Img.name.replace(/\s+/g, '-');
-      await writeFile(path.join(process.cwd(), "public", "uploads", uniqueName), Buffer.from(bytes));
-      pkg1ImageSrc = `/uploads/${uniqueName}`;
-    }
+    uploadTasks.push(processUpload(p1Img, (url) => { pkg1ImageSrc = url; }));
 
     let pkg2ImageSrc = "";
     const p2Img = formData.get("package2Image") as File | null;
-    if (p2Img && p2Img.size > 0) {
-      const bytes = await p2Img.arrayBuffer();
-      const uniqueName = Date.now() + '-p2-' + p2Img.name.replace(/\s+/g, '-');
-      await writeFile(path.join(process.cwd(), "public", "uploads", uniqueName), Buffer.from(bytes));
-      pkg2ImageSrc = `/uploads/${uniqueName}`;
-    }
+    uploadTasks.push(processUpload(p2Img, (url) => { pkg2ImageSrc = url; }));
 
     let pkg3ImageSrc = "";
     const p3Img = formData.get("package3Image") as File | null;
-    if (p3Img && p3Img.size > 0) {
-      const bytes = await p3Img.arrayBuffer();
-      const uniqueName = Date.now() + '-p3-' + p3Img.name.replace(/\s+/g, '-');
-      await writeFile(path.join(process.cwd(), "public", "uploads", uniqueName), Buffer.from(bytes));
-      pkg3ImageSrc = `/uploads/${uniqueName}`;
-    }
+    uploadTasks.push(processUpload(p3Img, (url) => { pkg3ImageSrc = url; }));
+
+    await Promise.all(uploadTasks);
 
     const buildPackageList = (indPrice: number, couplePrice: number, familyPrice: number) => ([
       {

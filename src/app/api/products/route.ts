@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { Product } from '@/models/Product';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function GET() {
   try {
@@ -32,15 +31,10 @@ export async function POST(request: Request) {
     const image = formData.get("image") as File | null;
     let imageSrc = "";
 
-    if (image && image.name) {
+    if (image && image.name && image.size > 0) {
       const bytes = await image.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      
-      const uniqueName = Date.now() + '-' + image.name.replace(/\s+/g, '-');
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueName);
-      
-      await writeFile(uploadPath, buffer);
-      imageSrc = `/uploads/${uniqueName}`;
+      imageSrc = await uploadToCloudinary(buffer);
     } else {
       return NextResponse.json({ success: false, error: 'Image is required' }, { status: 400 });
     }
