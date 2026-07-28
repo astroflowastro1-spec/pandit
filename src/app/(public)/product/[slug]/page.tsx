@@ -3,6 +3,8 @@ import { Product } from "@/models/Product";
 import { notFound } from "next/navigation";
 import ProductDetailsClient from "@/components/product/ProductDetailsClient";
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   await dbConnect();
   const { slug } = await params;

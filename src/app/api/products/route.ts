@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { Product } from '@/models/Product';
+
+export const dynamic = 'force-dynamic';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function GET() {
