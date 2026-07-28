@@ -27,6 +27,28 @@ export default function ProductsPage() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setProducts(products.filter(p => p._id !== id));
+      } else {
+        alert("Failed to delete product: " + (data.error || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("An error occurred while deleting the product.");
+    }
+  };
+
   if (isLoading) {
     return <div className="p-8 text-center">Loading products...</div>;
   }
@@ -55,14 +77,13 @@ export default function ProductsPage() {
                 <th className="px-6 py-4 font-semibold">Title</th>
                 <th className="px-6 py-4 font-semibold">Category</th>
                 <th className="px-6 py-4 font-semibold">Price (INR)</th>
-                <th className="px-6 py-4 font-semibold">Price (USD)</th>
                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {products.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
                     No products found. Add your first product!
                   </td>
                 </tr>
@@ -86,13 +107,23 @@ export default function ProductsPage() {
                     <td className="px-6 py-4 font-bold text-emerald-600">
                       ₹{product.priceInr}
                     </td>
-                    <td className="px-6 py-4 font-bold text-emerald-600">
-                      ${product.priceUsd}
-                    </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-red-500 hover:text-red-700 p-2 ml-2 transition-colors">
-                        <FiTrash2 size={18} />
-                      </button>
+                      <div className="flex justify-end gap-2">
+                        <Link 
+                          href={`/admin/edit-product/${product._id}`}
+                          className="text-blue-500 hover:text-blue-700 p-2 transition-colors"
+                          title="Edit Product"
+                        >
+                          <FiEdit2 size={18} />
+                        </Link>
+                        <button 
+                          onClick={() => handleDelete(product._id)}
+                          className="text-red-500 hover:text-red-700 p-2 transition-colors"
+                          title="Delete Product"
+                        >
+                          <FiTrash2 size={18} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

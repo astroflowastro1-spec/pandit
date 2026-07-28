@@ -34,9 +34,21 @@ export async function POST(request: Request) {
     if (image && image.name && image.size > 0) {
       const bytes = await image.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      imageSrc = await uploadToCloudinary(buffer);
+      imageSrc = await uploadToCloudinary(buffer, 'products');
     } else {
       return NextResponse.json({ success: false, error: 'Image is required' }, { status: 400 });
+    }
+
+    const galleryFiles = formData.getAll("galleryImages") as File[];
+    const galleryImages: string[] = [];
+    
+    for (const file of galleryFiles) {
+      if (file && file.size > 0) {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const url = await uploadToCloudinary(buffer, 'products/gallery');
+        galleryImages.push(url);
+      }
     }
 
     const generateSlug = (text: string) => {
@@ -68,6 +80,7 @@ export async function POST(request: Request) {
       originalPriceInr,
       originalPriceUsd,
       imageSrc,
+      galleryImages,
     });
     
     return NextResponse.json({ success: true, data: product }, { status: 201 });

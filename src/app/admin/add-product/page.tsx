@@ -12,6 +12,9 @@ export default function AddProductPage() {
   // Single Upload State
   const [image, setImage] = useState<File | null>(null);
   
+  // Gallery Upload State
+  const [galleryImages, setGalleryImages] = useState<File[]>([]);
+  
   // Bulk Upload State
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [isBulkUploading, setIsBulkUploading] = useState(false);
@@ -27,6 +30,10 @@ export default function AddProductPage() {
       if (image) {
         formData.set("image", image);
       }
+      
+      galleryImages.forEach(file => {
+        formData.append("galleryImages", file);
+      });
 
       const response = await fetch("/api/products", {
         method: "POST",
@@ -89,8 +96,6 @@ export default function AddProductPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Product</h1>
         <p className="text-gray-500">Add a product manually or upload a CSV file.</p>
       </div>
-      
-
 
       {/* Manual Upload Form */}
       <form onSubmit={handleSingleSubmit} className="space-y-8 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
@@ -206,6 +211,40 @@ export default function AddProductPage() {
                 <span className="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB</span>
               </label>
             </div>
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <label className="text-sm font-bold text-gray-700 mb-2 block">Gallery Images (Optional)</label>
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition-colors">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                id="gallery-images"
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setGalleryImages(Array.from(e.target.files));
+                  }
+                }}
+              />
+              <label htmlFor="gallery-images" className="cursor-pointer flex flex-col items-center">
+                <FiImage className="w-12 h-12 text-gray-400 mb-3" />
+                <span className="text-sm font-medium text-blue-600 mb-1">
+                  {galleryImages.length > 0 ? `${galleryImages.length} images selected` : "Click to upload gallery images"}
+                </span>
+                <span className="text-xs text-gray-500">Multiple images allowed</span>
+              </label>
+            </div>
+            {galleryImages.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {galleryImages.map((file, index) => (
+                  <div key={index} className="px-3 py-1 bg-gray-100 text-xs rounded-full border border-gray-200">
+                    {file.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

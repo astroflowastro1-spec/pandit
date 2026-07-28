@@ -495,21 +495,13 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
 
         {/* Middle Section: Description & Significance (See More) */}
         <div id="about" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-12">
-          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-6 flex items-start gap-2 leading-relaxed">
-            <span>⚔️</span>
-            <span>
-              During the highly spiritually potent Gupt Navratri, participate in the rare Tri Maha Shakti Puja and Homam of Mahakali, Kaal Bhairav, and Mahadev to invoke one of the strongest forms of divine protection described in Sanatan Dharma.
-            </span>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <span>✨</span>
+            <span>About {puja.title}</span>
           </h2>
           
           <div className="relative">
             <div className={`transition-all duration-300 overflow-hidden ${showFullDesc ? 'max-h-none' : 'max-h-[140px]'}`}>
-              {/* Question Subtitle in screenshot style */}
-              <div className="flex items-center gap-2 mb-4 text-[#6B46C1] font-bold text-sm md:text-[15px]">
-                <span>-</span>
-                <span className="text-[#805AD5] text-base">📅</span>
-                <span>Why is Gupt Navratri considered the most powerful time for protection sadhana?</span>
-              </div>
               
               <p className="whitespace-pre-line leading-relaxed text-gray-500 font-medium text-[14px] md:text-[15px]">{puja.whyThisPuja || puja.description}</p>
             </div>

@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { useCountry } from "@/context/CountryContext";
 import { FiShoppingCart } from "react-icons/fi";
+import Link from "next/link";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,7 +14,7 @@ import "swiper/css/pagination";
 
 export default function ProductsSlider() {
   const [products, setProducts] = useState<any[]>([]);
-  const { convertPrice, formatPrice, isReady } = useCountry();
+  const { convertPrice, formatPrice, isReady, countryData } = useCountry();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -33,20 +34,18 @@ export default function ProductsSlider() {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4 font-serif">
+    <section className="py-20 bg-white relative overflow-hidden">
+      <div className="container mx-auto px-4 md:px-8 relative z-10">
+        <div className="flex flex-col items-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-serif text-center">
             Divine Products & Chadhava
           </h2>
-          <p className="text-gray-500 text-lg">
-            Authentic Rudraksha, Yantras, and Spiritual Items shipped globally.
-          </p>
+          <div className="w-20 h-1 bg-orange-500 rounded-full"></div>
         </div>
 
         <Swiper
           modules={[Navigation, Pagination]}
-          spaceBetween={24}
+          spaceBetween={28}
           slidesPerView={1}
           breakpoints={{
             640: { slidesPerView: 2 },
@@ -55,12 +54,19 @@ export default function ProductsSlider() {
           }}
           navigation
           pagination={{ clickable: true }}
-          className="pb-16 px-4 !py-4"
+          className="pb-20 px-4 !pt-4 !pb-16 products-swiper"
         >
           {products.map((product) => {
-            const price = isReady ? convertPrice(product.priceUsd) : product.priceInr;
+            const isIndia = isReady && countryData.currencyCode === 'INR';
+            
+            const price = isReady 
+              ? (isIndia ? product.priceInr : convertPrice(product.priceUsd)) 
+              : product.priceInr;
+              
             const originalPrice = isReady 
-              ? (product.originalPriceUsd ? convertPrice(product.originalPriceUsd) : null)
+              ? (isIndia 
+                  ? product.originalPriceInr 
+                  : (product.originalPriceUsd ? convertPrice(product.originalPriceUsd) : null))
               : product.originalPriceInr;
               
             const formattedPrice = isReady ? formatPrice(price) : `₹${price}`;
@@ -68,51 +74,58 @@ export default function ProductsSlider() {
 
             return (
               <SwiperSlide key={product._id} className="h-auto">
-                <div className="bg-white rounded-2xl border border-gray-100 hover:border-emerald-500 hover:shadow-xl transition-all duration-300 h-full flex flex-col overflow-hidden group">
-                  <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
-                    <SafeImage 
-                      src={product.imageSrc} 
-                      alt={product.title} 
-                      fill 
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover group-hover:scale-110 transition-transform duration-500" 
-                    />
-                    {formattedOriginalPrice && (
-                      <div className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-md">
-                        SALE
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="p-5 flex flex-col flex-1">
-                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-2">
-                      {product.category}
-                    </span>
-                    <h3 className="font-bold text-gray-900 text-lg leading-tight mb-2 line-clamp-2">
-                      {product.title}
-                    </h3>
-                    <p className="text-xs text-gray-500 mb-4 line-clamp-2 flex-1">
-                      {product.description}
-                    </p>
+                <Link href={`/product/${product.slug}`} className="block h-full">
+                  <div className="bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl hover:-translate-y-1 border border-gray-100 transition-all duration-300 h-full flex flex-col group cursor-pointer">
+                    <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[#F8F9FA] mb-5">
+                      <SafeImage 
+                        src={product.imageSrc} 
+                        alt={product.title} 
+                        fill 
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
+                      />
+                      
+                      {formattedOriginalPrice && (
+                        <div className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-sm z-20 tracking-wider">
+                          SALE
+                        </div>
+                      )}
+                    </div>
                     
-                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                      <div className="flex flex-col">
-                        {formattedOriginalPrice && (
-                          <span className="text-xs text-gray-400 line-through">
-                            {formattedOriginalPrice}
-                          </span>
-                        )}
-                        <span className="text-xl font-black text-gray-900">
-                          {formattedPrice}
+                    <div className="flex flex-col flex-1">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-[10px] font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                          {product.category}
                         </span>
                       </div>
                       
-                      <button className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-colors">
-                        <FiShoppingCart size={18} />
-                      </button>
+                      <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors duration-300">
+                        {product.title}
+                      </h3>
+                      
+                      <p className="text-[13px] text-gray-500 mb-6 line-clamp-2 flex-1 leading-relaxed">
+                        {product.description}
+                      </p>
+                      
+                      <div className="flex items-center justify-between mt-auto">
+                        <div className="flex flex-col">
+                          {formattedOriginalPrice && (
+                            <span className="text-xs text-gray-400 line-through mb-0.5">
+                              {formattedOriginalPrice}
+                            </span>
+                          )}
+                          <span className="text-xl font-black text-gray-900 tracking-tight">
+                            {formattedPrice}
+                          </span>
+                        </div>
+                        
+                        <button className="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all duration-300">
+                          <FiShoppingCart size={18} />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </SwiperSlide>
             );
           })}
