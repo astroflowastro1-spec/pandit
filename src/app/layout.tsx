@@ -17,6 +17,9 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Mere Pandit Ji | Premium Spiritual Journey",
   description: "Experience the divine with premium spiritual services, puja, and temple darshan.",
+  verification: {
+    google: "4Rf_3BnA0sQnHiI2XHhvX6FrJkLn29oohjeA6ebFAfQ",
+  },
 };
 
 export default function RootLayout({
