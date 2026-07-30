@@ -4,9 +4,10 @@ import { Category } from '@/models/Category';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { name, description } = await request.json();
 
     if (!name) {
@@ -21,7 +22,7 @@ export async function PUT(
     // Check if another category has the same name
     const existingCategory = await Category.findOne({
       name,
-      _id: { $ne: params.id }
+      _id: { $ne: id }
     });
 
     if (existingCategory) {
@@ -32,7 +33,7 @@ export async function PUT(
     }
 
     const updatedCategory = await Category.findByIdAndUpdate(
-      params.id,
+      id,
       { name, description },
       { new: true, runValidators: true }
     );
@@ -56,12 +57,13 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
+    const { id } = await params;
 
-    const deletedCategory = await Category.findByIdAndDelete(params.id);
+    const deletedCategory = await Category.findByIdAndDelete(id);
 
     if (!deletedCategory) {
       return NextResponse.json(
