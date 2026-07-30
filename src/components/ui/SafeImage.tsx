@@ -20,7 +20,7 @@ export default function SafeImage({
 
   return (
     <>
-      {errored ? (
+      {errored || !src ? (
         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 to-amber-50 text-amber-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -45,6 +45,7 @@ export default function SafeImage({
           {...props}
           src={src}
           alt={alt}
+          unoptimized={typeof src === 'string' && src.includes('cloudinary.com')}
           onError={() => setErrored(true)}
         />
       )}

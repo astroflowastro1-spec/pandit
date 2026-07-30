@@ -25,6 +25,10 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const data = await req.json();
     const { id } = await params;
 
+    // Clean up empty strings
+    if (!data.email) data.email = undefined;
+    if (!data.phone) data.phone = undefined;
+
     const updated = await Affiliate.findByIdAndUpdate(id, data, { new: true });
     
     if (!updated) {

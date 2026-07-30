@@ -12,6 +12,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [fetching, setFetching] = useState(true);
+  const [categories, setCategories] = useState<{name: string}[]>([]);
   
   const [formData, setFormData] = useState({
     title: "",
@@ -56,6 +57,19 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setError("Failed to load product");
         setFetching(false);
       });
+
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      }
+    };
+    fetchCategories();
   }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -164,13 +178,13 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               name="category"
               value={formData.category}
               onChange={handleChange}
+              required
               className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors bg-white"
             >
-              <option value="Rudraksha">Rudraksha</option>
-              <option value="Yantra">Yantra</option>
-              <option value="Chadhava">Chadhava</option>
-              <option value="Literature">Hindu Literature</option>
-              <option value="General">General</option>
+              <option value="">Select a category</option>
+              {categories.map((cat, idx) => (
+                <option key={idx} value={cat.name}>{cat.name}</option>
+              ))}
             </select>
           </div>
 

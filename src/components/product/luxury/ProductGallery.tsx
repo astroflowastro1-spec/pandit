@@ -49,7 +49,7 @@ export default function ProductGallery({ product, allImages }: ProductGalleryPro
 
       {/* Main Image Container */}
       <div 
-        className="relative w-full aspect-[4/5] rounded-[24px] overflow-hidden bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] cursor-crosshair group"
+        className="relative w-full aspect-square rounded-[24px] overflow-hidden bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] cursor-crosshair group"
         onMouseEnter={() => setIsZoomed(true)}
         onMouseLeave={() => setIsZoomed(false)}
         onMouseMove={handleMouseMove}
@@ -90,8 +90,8 @@ export default function ProductGallery({ product, allImages }: ProductGalleryPro
             onClick={() => setMainImage(img)}
             className={`relative w-20 h-24 md:w-24 md:h-28 flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 snap-center
               ${mainImage === img 
-                ? 'ring-2 ring-orange-500 ring-offset-2 opacity-100 shadow-md scale-100' 
-                : 'border border-gray-100 opacity-60 hover:opacity-100 hover:border-gray-200 scale-95 hover:scale-100'
+                ? 'border-2 border-orange-500 opacity-100 shadow-md scale-100' 
+                : 'border-2 border-transparent opacity-60 hover:opacity-100 hover:border-gray-200 scale-95 hover:scale-100'
               }`}
           >
             <SafeImage src={img} alt={`${product.title} - view ${idx+1}`} fill className="object-cover" />

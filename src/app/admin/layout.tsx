@@ -31,119 +31,125 @@ export default function AdminLayout({
           <h2 className="text-xl font-bold text-[#2563EB]">Pndit Admin</h2>
           <p className="text-xs text-gray-400 font-medium mt-0.5">merepanditji.org</p>
         </div>
-        <nav className="p-4 space-y-2 flex-1">
-          <Link
-            href="/admin"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-              pathname === "/admin"
-                ? "bg-blue-50 text-blue-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiList className="text-lg" />
-            All Pujas
-          </Link>
-          <Link
-            href="/admin/add-puja"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-              pathname === "/admin/add-puja"
-                ? "bg-blue-50 text-blue-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiPlusSquare className="text-lg" />
-            Add New Puja
-          </Link>
+        <nav className="p-4 space-y-6 flex-1 overflow-y-auto">
+          
+          {/* Services Section */}
+          <div>
+            <h3 className="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Services</h3>
+            <div className="space-y-1">
+              <Link
+                href="/admin"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin" ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiList className="text-lg" /> All Pujas
+              </Link>
+              <Link
+                href="/admin/add-puja"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/add-puja" ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiPlusSquare className="text-lg" /> Add New Puja
+              </Link>
+              <Link
+                href="/admin/chadhava"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/chadhava" ? "bg-purple-50 text-purple-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiList className="text-lg" /> Manage Chadhavas
+              </Link>
+              <Link
+                href="/admin/add-chadhava"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/add-chadhava" ? "bg-purple-50 text-purple-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiPlusSquare className="text-lg" /> Add New Chadhava
+              </Link>
+              <Link
+                href="/admin/bookings"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/bookings" ? "bg-[#FEF3C7] text-[#D97706]" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiList className="text-lg" /> Service Bookings
+              </Link>
+            </div>
+          </div>
 
-          <Link
-            href="/admin/chadhava"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors mt-4 border-t pt-6 border-gray-100 ${
-              pathname === "/admin/chadhava"
-                ? "bg-purple-50 text-purple-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiList className="text-lg" />
-            Manage Chadhavas
-          </Link>
+          {/* E-Commerce Section */}
+          <div>
+            <h3 className="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">E-Commerce</h3>
+            <div className="space-y-1">
+              <Link
+                href="/admin/categories"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/categories" ? "bg-emerald-50 text-emerald-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiList className="text-lg" /> Manage Categories
+              </Link>
+              <Link
+                href="/admin/products"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/products" ? "bg-emerald-50 text-emerald-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiPackage className="text-lg" /> All Products
+              </Link>
+              <Link
+                href="/admin/add-product"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/add-product" ? "bg-emerald-50 text-emerald-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiPlusSquare className="text-lg" /> Add New Product
+              </Link>
+              <Link
+                href="/admin/product-orders"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/product-orders" ? "bg-amber-50 text-amber-600" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiList className="text-lg" /> Product Orders
+              </Link>
+            </div>
+          </div>
 
-          <Link
-            href="/admin/affiliates"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors mt-4 border-t pt-6 border-gray-100 ${
-              pathname === "/admin/affiliates"
-                ? "bg-green-50 text-green-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiUsers className="text-lg" />
-            Affiliates
-          </Link>
+          {/* Management Section */}
+          <div>
+            <h3 className="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Management</h3>
+            <div className="space-y-1">
+              <Link
+                href="/admin/affiliates"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/affiliates" ? "bg-green-50 text-green-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiUsers className="text-lg" /> Affiliates
+              </Link>
+              <Link
+                href="/admin/payouts"
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                  pathname === "/admin/payouts" ? "bg-green-50 text-green-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <FiDollarSign className="text-lg" /> Payout Requests
+              </Link>
+            </div>
+          </div>
 
-          <Link
-            href="/admin/payouts"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-              pathname === "/admin/payouts"
-                ? "bg-green-50 text-green-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiDollarSign className="text-lg" />
-            Payout Requests
-          </Link>
-          <Link
-            href="/admin/add-chadhava"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-              pathname === "/admin/add-chadhava"
-                ? "bg-purple-50 text-purple-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiPlusSquare className="text-lg" />
-            Add New Chadhava
-          </Link>
-
-          <Link
-            href="/admin/products"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors mt-4 border-t pt-6 border-gray-100 ${
-              pathname === "/admin/products"
-                ? "bg-emerald-50 text-emerald-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiPackage className="text-lg" />
-            All Products
-          </Link>
-          <Link
-            href="/admin/add-product"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-              pathname === "/admin/add-product"
-                ? "bg-emerald-50 text-emerald-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiPlusSquare className="text-lg" />
-            Add New Product
-          </Link>
-
-          <Link
-            href="/admin/bookings"
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors mt-4 border-t pt-6 border-gray-100 ${
-              pathname === "/admin/bookings"
-                ? "bg-[#FEF3C7] text-[#D97706]"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <FiList className="text-lg" />
-            Bookings & Orders
-          </Link>
-
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors mt-8"
-          >
-            <FiHome className="text-lg" />
-            Back to Website
-          </Link>
+          <div className="pt-4 border-t border-gray-100">
+            <Link
+              href="/"
+              className="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+            >
+              <FiHome className="text-lg" /> Back to Website
+            </Link>
+          </div>
         </nav>
 
         {/* Logout Button */}

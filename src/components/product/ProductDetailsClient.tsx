@@ -20,11 +20,15 @@ export default function ProductDetailsClient({ product }: { product: any }) {
     ? (isIndia ? product.priceInr : convertPrice(product.priceUsd)) 
     : product.priceInr;
     
+  // If original price is not set in DB, assume a 25% markup to show a discount (price * 1.33 gives a 25% discount, price / 0.75)
+  const defaultOrigInr = product.originalPriceInr || Math.round(product.priceInr / 0.75);
+  const defaultOrigUsd = product.originalPriceUsd || Math.round(product.priceUsd / 0.75);
+
   const originalPrice = isReady 
     ? (isIndia 
-        ? product.originalPriceInr 
-        : (product.originalPriceUsd ? convertPrice(product.originalPriceUsd) : null))
-    : product.originalPriceInr;
+        ? defaultOrigInr 
+        : convertPrice(defaultOrigUsd))
+    : defaultOrigInr;
     
   const formattedPrice = isReady ? formatPrice(price) : `₹${price}`;
   const formattedOriginalPrice = originalPrice ? (isReady ? formatPrice(originalPrice) : `₹${originalPrice}`) : null;
@@ -62,7 +66,9 @@ export default function ProductDetailsClient({ product }: { product: any }) {
               <ProductInfo 
                 product={product} 
                 formattedPrice={formattedPrice} 
-                formattedOriginalPrice={formattedOriginalPrice} 
+                formattedOriginalPrice={formattedOriginalPrice}
+                rawPrice={price}
+                rawOriginalPrice={originalPrice}
               />
             </div>
             
@@ -78,7 +84,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
       <RelatedProducts currentCategory={product.category} />
 
       {/* 8. Sticky Bottom Bar */}
-      <StickyBuyBar product={product} formattedPrice={formattedPrice} />
+      <StickyBuyBar product={product} formattedPrice={formattedPrice} rawPrice={price} />
       
     </div>
   );

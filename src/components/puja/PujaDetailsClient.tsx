@@ -1081,7 +1081,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                       member4Name: isFamily && member4Name.trim() ? member4Name.trim() : undefined,
                     };
                     localStorage.setItem("pending_booking", JSON.stringify(bookingData));
-                    router.push("/cart");
+                    router.push("/puja-checkout");
                   }}
                   className={`w-full py-3.5 rounded-lg font-bold text-[15px] transition-all ${
                     whatsappPhone.length >= 10 && 

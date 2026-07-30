@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FiUploadCloud, FiSave, FiImage, FiFileText } from "react-icons/fi";
 
@@ -8,6 +8,22 @@ export default function AddProductPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState<{name: string}[]>([]);
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      }
+    };
+    fetchCategories();
+  }, []);
   
   // Single Upload State
   const [image, setImage] = useState<File | null>(null);
@@ -134,13 +150,13 @@ export default function AddProductPage() {
             <label className="text-sm font-bold text-gray-700">Category</label>
             <select
               name="category"
+              required
               className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors bg-white"
             >
-              <option value="Rudraksha">Rudraksha</option>
-              <option value="Yantra">Yantra</option>
-              <option value="Chadhava">Chadhava</option>
-              <option value="Literature">Hindu Literature</option>
-              <option value="General">General</option>
+              <option value="">Select a category</option>
+              {categories.map((cat, idx) => (
+                <option key={idx} value={cat.name}>{cat.name}</option>
+              ))}
             </select>
           </div>
 

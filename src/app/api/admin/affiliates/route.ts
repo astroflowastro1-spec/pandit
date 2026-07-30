@@ -28,10 +28,16 @@ export async function POST(req: Request) {
     await dbConnect();
     const data = await req.json();
 
-    // Check if email already exists
-    const existing = await Affiliate.findOne({ email: data.email });
-    if (existing) {
-      return NextResponse.json({ success: false, message: "Email already registered" }, { status: 400 });
+    // Clean up empty strings to avoid unique constraint issues
+    if (!data.email) data.email = undefined;
+    if (!data.phone) data.phone = undefined;
+
+    // Check if email already exists (only if provided)
+    if (data.email) {
+      const existing = await Affiliate.findOne({ email: data.email });
+      if (existing) {
+        return NextResponse.json({ success: false, message: "Email already registered" }, { status: 400 });
+      }
     }
 
     // Auto-generate affiliate code

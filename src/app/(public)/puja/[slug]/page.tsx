@@ -3,6 +3,8 @@ import { Puja } from "@/models/Puja";
 import { notFound } from "next/navigation";
 import PujaDetailsClient from "@/components/puja/PujaDetailsClient";
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   await dbConnect();
   const { slug } = await params;

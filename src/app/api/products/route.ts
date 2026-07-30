@@ -8,7 +8,7 @@ import { uploadToCloudinary } from '@/lib/cloudinary';
 export async function GET() {
   try {
     await dbConnect();
-    const products = await Product.find({}).sort({ order: 1, createdAt: -1 }).lean();
+    const products = await Product.find({}).sort({ order: 1, createdAt: 1 }).lean();
     return NextResponse.json({ success: true, data: products });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch products' }, { status: 500 });
@@ -31,27 +31,28 @@ export async function POST(request: Request) {
     const originalPriceUsd = formData.get("originalPriceUsd") ? Number(formData.get("originalPriceUsd")) : undefined;
     
     const image = formData.get("image") as File | null;
-    let imageSrc = "";
+    let mainImagePromise: Promise<string> = Promise.resolve("");
 
     if (image && image.name && image.size > 0) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      imageSrc = await uploadToCloudinary(buffer, 'products');
+      mainImagePromise = image.arrayBuffer().then(bytes => {
+        return uploadToCloudinary(Buffer.from(bytes), 'products');
+      });
     } else {
       return NextResponse.json({ success: false, error: 'Image is required' }, { status: 400 });
     }
 
     const galleryFiles = formData.getAll("galleryImages") as File[];
-    const galleryImages: string[] = [];
-    
-    for (const file of galleryFiles) {
+    const galleryPromises = galleryFiles.map(async (file) => {
       if (file && file.size > 0) {
         const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-        const url = await uploadToCloudinary(buffer, 'products/gallery');
-        galleryImages.push(url);
+        return uploadToCloudinary(Buffer.from(bytes), 'products/gallery');
       }
-    }
+      return null;
+    });
+
+    // Await all uploads simultaneously to maximize speed
+    const [imageSrc, ...galleryResults] = await Promise.all([mainImagePromise, ...galleryPromises]);
+    const galleryImages = galleryResults.filter((url): url is string => url !== null);
 
     const generateSlug = (text: string) => {
       return text

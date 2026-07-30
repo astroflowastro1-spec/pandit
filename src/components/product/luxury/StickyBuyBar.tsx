@@ -3,9 +3,14 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SafeImage from "@/components/ui/SafeImage";
+import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
+import { useCountry } from "@/context/CountryContext";
 
-export default function StickyBuyBar({ product, formattedPrice }: { product: any, formattedPrice: string }) {
+export default function StickyBuyBar({ product, formattedPrice, rawPrice }: { product: any, formattedPrice: string, rawPrice: number }) {
   const [isVisible, setIsVisible] = useState(false);
+  const { addToCart } = useCart();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +25,18 @@ export default function StickyBuyBar({ product, formattedPrice }: { product: any
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product._id,
+      slug: product.slug,
+      title: product.title,
+      price: rawPrice,
+      image: product.imageSrc || product.images?.[0] || "",
+      quantity: 1
+    });
+    router.push("/cart");
+  };
 
   return (
     <AnimatePresence>
@@ -47,8 +64,11 @@ export default function StickyBuyBar({ product, formattedPrice }: { product: any
               <div className="text-xl font-black text-gray-900">
                 {formattedPrice}
               </div>
-              <button className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-[0_4px_12px_rgb(234,88,12,0.25)] hover:shadow-[0_8px_20px_rgb(234,88,12,0.35)] hover:-translate-y-0.5 whitespace-nowrap">
-                Add to Cart
+              <button 
+                onClick={handleAddToCart}
+                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-[0_4px_12px_rgb(234,88,12,0.25)] hover:shadow-[0_8px_20px_rgb(234,88,12,0.35)] hover:-translate-y-0.5 whitespace-nowrap"
+              >
+                Buy It Now
               </button>
             </div>
 

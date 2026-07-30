@@ -8,6 +8,8 @@ import Features from "@/components/home/Features";
 import dbConnect from "@/lib/dbConnect";
 import { Puja } from "@/models/Puja";
 
+export const revalidate = 60; // Cache for 60 seconds (ISR)
+
 export default async function Home() {
   await dbConnect();
   // Fetch active pujas from DB

@@ -25,8 +25,8 @@ export interface IAffiliate extends Document {
 
 const AffiliateSchema: Schema = new Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  phone: { type: String, required: true },
+  email: { type: String, unique: true, sparse: true },
+  phone: { type: String },
   password: { type: String }, // Can be set if we want to allow login later
   affiliateCode: { type: String, required: true, unique: true },
   status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },

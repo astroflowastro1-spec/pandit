@@ -1,10 +1,10 @@
-import CartClient from "@/components/cart/CartClient";
+import ProductCartClient from "@/components/cart/ProductCartClient";
 
 export const metadata = {
-  title: "Review Booking | Mere Pandit Ji",
-  description: "Review and securely complete your Puja booking.",
+  title: "Shopping Cart | Mere Pandit Ji",
+  description: "Review items in your cart and proceed to secure checkout.",
 };
 
 export default function CartPage() {
-  return <CartClient />;
+  return <ProductCartClient />;
 }

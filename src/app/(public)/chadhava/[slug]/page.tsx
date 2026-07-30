@@ -3,6 +3,8 @@ import { Chadhava } from "@/models/Chadhava";
 import { notFound } from "next/navigation";
 import ChadhavaDetailsClient from "@/components/chadhava/ChadhavaDetailsClient";
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   await dbConnect();
   const { slug } = await params;
