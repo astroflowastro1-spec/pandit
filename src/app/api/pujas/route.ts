@@ -91,13 +91,19 @@ export async function POST(request: Request) {
     }
 
     // Parse Packages
-    const indiaIndPrice = Number(formData.get("indiaIndividualPrice")) || 251;
-    const indiaCouplePrice = Number(formData.get("indiaCouplePrice")) || 501;
-    const indiaFamilyPrice = Number(formData.get("indiaFamilyPrice")) || 1100;
+    const parsePrice = (val: FormDataEntryValue | null, fallback: number) => {
+      if (val === null || val === "") return fallback;
+      const num = Number(val);
+      return isNaN(num) ? fallback : num;
+    };
+
+    const indiaIndPrice = parsePrice(formData.get("indiaIndividualPrice"), 251);
+    const indiaCouplePrice = parsePrice(formData.get("indiaCouplePrice"), 501);
+    const indiaFamilyPrice = parsePrice(formData.get("indiaFamilyPrice"), 1100);
     
-    const nriIndPrice = Number(formData.get("nriIndividualPrice")) || 501;
-    const nriCouplePrice = Number(formData.get("nriCouplePrice")) || 1100;
-    const nriFamilyPrice = Number(formData.get("nriFamilyPrice")) || 2100;
+    const nriIndPrice = parsePrice(formData.get("nriIndividualPrice"), 501);
+    const nriCouplePrice = parsePrice(formData.get("nriCouplePrice"), 1100);
+    const nriFamilyPrice = parsePrice(formData.get("nriFamilyPrice"), 2100);
 
     const buildPackageList = (indPrice: number, couplePrice: number, familyPrice: number) => ([
       {

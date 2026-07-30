@@ -687,15 +687,24 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                 </div>
 
                 {puja.isActive !== false && (
-                  <button 
-                    onClick={() => {
-                      setSelectedPkg(pkg);
-                      setIsDetailsPopupOpen(true);
-                    }}
-                    className="w-full mt-8 bg-[#117B50] hover:bg-[#0D6240] text-white text-xs font-bold tracking-widest uppercase py-3.5 rounded-xl transition-all shadow-sm"
-                  >
-                    Proceed to Book
-                  </button>
+                  pkg.price > 0 ? (
+                    <button 
+                      onClick={() => {
+                        setSelectedPkg(pkg);
+                        setIsDetailsPopupOpen(true);
+                      }}
+                      className="w-full mt-8 bg-[#117B50] hover:bg-[#0D6240] text-white text-xs font-bold tracking-widest uppercase py-3.5 rounded-xl transition-all shadow-sm"
+                    >
+                      Proceed to Book
+                    </button>
+                  ) : (
+                    <button 
+                      disabled
+                      className="w-full mt-8 bg-gray-300 text-gray-500 text-xs font-bold tracking-widest uppercase py-3.5 rounded-xl cursor-not-allowed shadow-sm"
+                    >
+                      Currently Unavailable
+                    </button>
+                  )
                 )}
               </div>
             ))}
@@ -880,16 +889,25 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                         </div>
                       </div>
 
-                      <button 
-                        onClick={() => {
-                          setSelectedPkg(pkg);
-                          setIsPackagePopupOpen(false);
-                          setIsDetailsPopupOpen(true);
-                        }}
-                        className="w-full mt-auto bg-[#117B50] hover:bg-[#0D6240] text-white text-xs font-bold tracking-widest uppercase py-3 rounded-xl transition-all shadow-sm"
-                      >
-                        Proceed to Book
-                      </button>
+                      {pkg.price > 0 ? (
+                        <button 
+                          onClick={() => {
+                            setSelectedPkg(pkg);
+                            setIsPackagePopupOpen(false);
+                            setIsDetailsPopupOpen(true);
+                          }}
+                          className="w-full mt-auto bg-[#117B50] hover:bg-[#0D6240] text-white text-xs font-bold tracking-widest uppercase py-3 rounded-xl transition-all shadow-sm"
+                        >
+                          Proceed to Book
+                        </button>
+                      ) : (
+                        <button 
+                          disabled
+                          className="w-full mt-auto bg-gray-300 text-gray-500 text-xs font-bold tracking-widest uppercase py-3 rounded-xl cursor-not-allowed shadow-sm"
+                        >
+                          Currently Unavailable
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
