@@ -63,7 +63,7 @@ export default function CheckoutClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: totalPrice,
+          amount: totalPrice * 1.18,
           currency: countryData.currencyCode || "INR",
         }),
       });
@@ -107,7 +107,7 @@ export default function CheckoutClient() {
                 signature: response.razorpay_signature,
                 items: cartItems,
                 shippingInfo: formData,
-                totalPaid: totalPrice,
+                totalPaid: totalPrice * 1.18,
                 date: new Date().toISOString()
               })
             }).catch(e => console.error(e));
@@ -268,15 +268,15 @@ export default function CheckoutClient() {
                   <span className="text-emerald-600 uppercase text-xs font-bold tracking-wider">Free</span>
                 </div>
                 <div className="flex justify-between text-gray-600 font-medium">
-                  <span>GST</span>
-                  <span>Inclusive</span>
+                  <span>GST (18%)</span>
+                  <span>{formatPrice(totalPrice * 0.18)}</span>
                 </div>
               </div>
 
               <div className="border-t-2 border-dashed border-gray-200 pt-4 mb-6">
                 <div className="flex justify-between items-end">
                   <span className="font-bold text-gray-500 text-sm mb-1">Total to Pay</span>
-                  <span className="font-black text-3xl text-gray-900 leading-none">{formatPrice(totalPrice)}</span>
+                  <span className="font-black text-3xl text-gray-900 leading-none">{formatPrice(totalPrice * 1.18)}</span>
                 </div>
               </div>
 

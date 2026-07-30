@@ -135,15 +135,15 @@ export default function ProductCartClient() {
                 </div>
                 
                 <div className="flex justify-between items-center text-gray-600 font-medium text-sm">
-                  <span>GST (Inclusive)</span>
-                  <span>--</span>
+                  <span>GST (18%)</span>
+                  <span>{formatPrice(totalPrice * 0.18)}</span>
                 </div>
               </div>
 
               <div className="border-t-2 border-dashed border-gray-200 pt-6 mb-8">
                 <div className="flex justify-between items-end">
                   <span className="font-bold text-gray-900 text-lg">Total</span>
-                  <span className="font-black text-3xl text-orange-600 leading-none">{formatPrice(totalPrice)}</span>
+                  <span className="font-black text-3xl text-orange-600 leading-none">{formatPrice(totalPrice * 1.18)}</span>
                 </div>
               </div>
 
