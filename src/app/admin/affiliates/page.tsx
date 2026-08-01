@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiPlus, FiTrash2, FiUsers, FiDollarSign, FiCopy } from "react-icons/fi";
+import { FiPlus, FiTrash2, FiUsers, FiCopy } from "react-icons/fi";
 
 export default function AffiliatesDashboard() {
   const [affiliates, setAffiliates] = useState<any[]>([]);
@@ -109,7 +109,6 @@ export default function AffiliatesDashboard() {
                 <th className="px-6 py-4 font-medium text-gray-600">Name & Code</th>
                 <th className="px-6 py-4 font-medium text-gray-600">Contact</th>
                 <th className="px-6 py-4 font-medium text-gray-600">Commission</th>
-                <th className="px-6 py-4 font-medium text-gray-600">Wallet</th>
                 <th className="px-6 py-4 font-medium text-gray-600">Actions</th>
               </tr>
             </thead>
@@ -145,12 +144,6 @@ export default function AffiliatesDashboard() {
                         : `₹${affiliate.commissionConfig.value}`}
                     </p>
                     <p className="text-xs text-gray-500">{affiliate.commissionConfig.scope}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm font-bold text-green-600 flex items-center gap-1">
-                      <FiDollarSign />
-                      {affiliate.walletBalance}
-                    </p>
                   </td>
                   <td className="px-6 py-4 flex items-center gap-3">
                     <button
