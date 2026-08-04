@@ -13,7 +13,10 @@ export const revalidate = 60; // Cache for 60 seconds (ISR)
 export default async function Home() {
   await dbConnect();
   // Fetch active pujas from DB
-  const rawPujas = await Puja.find({ isActive: { $ne: false } }).limit(6).lean();
+  const rawPujas = await Puja.find({ isActive: { $ne: false } })
+    .sort({ order: 1, createdAt: 1 })
+    .limit(6)
+    .lean();
   
   // Serialize Mongoose objects
   const dynamicPujas = rawPujas.map((p: any) => ({
