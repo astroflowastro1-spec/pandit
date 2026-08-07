@@ -525,7 +525,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
         {puja.aboutTemple && (
           <div id="temple" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-12">
             <h2 className="text-xl md:text-2xl font-black text-gray-955 mb-6 flex items-center gap-2.5">
-              <span>🕌</span> About Temple
+              About Temple
             </h2>
             <div className="bg-[#FFFDF6] border border-[#F3912E]/5 rounded-3xl p-6 md:p-8 shadow-sm">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
@@ -660,7 +660,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                     {pkg.description}
                   </p>
                   
-                  <div className="flex items-baseline gap-2 mb-6">
+                  <div className="flex items-baseline gap-2 mb-1">
                     <span className="text-3xl font-black text-gray-900">
                       {formatPrice(pkg.priceConverted || pkg.price)}
                     </span>
@@ -675,6 +675,9 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                       </>
                     )}
                   </div>
+                  <p className="text-[11px] text-gray-500 font-medium mb-5">
+                    +18% GST at checkout.
+                  </p>
 
                   <div className="border-t border-gray-100 pt-5 space-y-3">
                     {pkg.features.map((feat, i) => (
@@ -867,7 +870,7 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                         <p className="text-gray-500 text-[11px] leading-relaxed mb-4">
                           {pkg.description}
                         </p>
-                        <div className="flex items-baseline gap-2 mb-4">
+                        <div className="flex items-baseline gap-2 mb-1">
                           <span className="text-2xl font-black text-gray-900">
                             {formatPrice(pkg.priceConverted || pkg.price)}
                           </span>
@@ -879,6 +882,9 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
                             </>
                           )}
                         </div>
+                        <p className="text-[10px] text-gray-500 font-medium mb-3">
+                          +18% GST at checkout.
+                        </p>
                         <div className="border-t border-gray-100 pt-4 space-y-2.5 mb-6">
                           {pkg.features.map((feat, i) => (
                             <div key={i} className="flex items-start gap-2 text-[11px] text-gray-600">

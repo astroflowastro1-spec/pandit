@@ -586,7 +586,7 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
         {Chadhava.aboutTemple && (
           <div id="temple" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-12">
             <h2 className="text-xl md:text-2xl font-black text-gray-955 mb-6 flex items-center gap-2.5">
-              <span>🕌</span> About Temple
+              About Temple
             </h2>
             <div className="bg-[#FFFDF6] border border-[#F3912E]/5 rounded-3xl p-6 md:p-8 shadow-sm">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
@@ -719,6 +719,9 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                       </span>
                     )}
                   </div>
+                  <p className="text-[11px] text-gray-500 font-medium mt-0.5">
+                    +18% GST at checkout.
+                  </p>
                 </div>
 
                 {/* Right side: Image & Button */}
@@ -905,6 +908,9 @@ export default function ChadhavaDetailsClient({ Chadhava }: ChadhavaDetailsClien
                             {formatPrice(pkg.priceConverted || pkg.price)}
                           </span>
                         </div>
+                        <p className="text-[10px] text-gray-500 font-medium mt-0.5">
+                          +18% GST at checkout.
+                        </p>
                       </div>
 
                       <div className="flex flex-col items-center gap-2 shrink-0">

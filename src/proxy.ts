@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const SESSION_SECRET = process.env.SESSION_SECRET || 'pndit_secret_key_2024';
 
-export function proxy(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   
   // We need to return a response object so we can attach cookies if needed
@@ -42,7 +42,8 @@ export function proxy(req: NextRequest) {
   }
 
   // 2. Protect Admin Routes
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+  const normalizedPath = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
+  if (normalizedPath.startsWith('/admin') && normalizedPath !== '/admin/login') {
     const session = req.cookies.get('admin_session');
     if (!session || session.value !== SESSION_SECRET) {
       const loginUrl = new URL('/admin/login', req.url);
@@ -59,3 +60,5 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|api|uploads).*)',
   ],
 };
+
+export { proxy };
