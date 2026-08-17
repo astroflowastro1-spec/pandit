@@ -9,6 +9,12 @@ import "swiper/css/navigation";
 
 const videoReviews = [
   {
+    videoId: "PrSpOT9mpTU",
+    name: "Rinmukti Dhan Prapti Mahapuja",
+    location: "Kashi",
+    initials: "RD"
+  },
+  {
     videoId: "MxQ_GS7Ej6c",
     name: "Achutam Nair",
     location: "Bangalore",

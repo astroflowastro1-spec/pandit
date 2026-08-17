@@ -9,6 +9,7 @@ import { GoHome } from "react-icons/go";
 import { useCountry } from "@/context/CountryContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import ReviewsSlider from "@/components/home/ReviewsSlider";
 
 interface PackageType {
   id: string;
@@ -393,9 +394,12 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
 
             {/* Timer Block - No outer border card, matched styling */}
             <div className="space-y-2.5">
-              <p className="text-gray-700 text-sm font-extrabold">
-                Puja booking will close in :
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-gray-700 text-sm font-extrabold">
+                  Puja booking will close in :
+                </p>
+                <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-100 animate-pulse">Limited Slots left</span>
+              </div>
               
               <div className="flex items-center gap-2">
                 {/* Days */}
@@ -424,26 +428,21 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
               </div>
             </div>
 
-            {/* Ratings and Devotees Row - 7 avatars and dotted ratings text */}
-            <div className="flex flex-wrap items-center gap-3.5 pt-2">
+            {/* Ratings and Devotees Row */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <div className="flex -space-x-2">
                 <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/32.jpg" alt="devotee" width={28} height={28} />
-                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/46.jpg" alt="devotee" width={28} height={28} />
                 <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/women/44.jpg" alt="devotee" width={28} height={28} />
                 <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/62.jpg" alt="devotee" width={28} height={28} />
-                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/22.jpg" alt="devotee" width={28} height={28} />
-                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/women/24.jpg" alt="devotee" width={28} height={28} />
-                <img className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm" src="https://randomuser.me/api/portraits/men/52.jpg" alt="devotee" width={28} height={28} />
               </div>
-              <span className="text-xs md:text-sm font-extrabold text-[#FF7F3F] flex items-center gap-1">
-                <span>★ 4.9</span>
-                <span className="border-b border-dashed border-[#FF7F3F] pb-0.5 cursor-pointer">(7K+ ratings)</span>
-              </span>
+              <div className="flex flex-wrap items-center gap-2 text-[13px] md:text-sm font-extrabold text-[#E67E22]">
+                <span className="flex items-center gap-1">⭐ 4.9/5</span>
+                <span className="text-gray-300">|</span>
+                <span>7,000+ Ratings</span>
+                <span className="text-gray-300">|</span>
+                <span>3,00,000+ Devotees</span>
+              </div>
             </div>
-
-            <p className="text-[13px] md:text-sm text-gray-500 font-semibold leading-relaxed">
-              Till now <span className="text-[#FF7F3F] font-black">3,00,000+ Devotees</span> have participated in Pujas conducted by Mere Pandit Ji Seva.
-            </p>
 
             {/* Participate Button - Shopify Green matching screenshot */}
             {puja.isActive !== false && (
@@ -549,6 +548,14 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
             </div>
           </div>
         )}
+
+      </div>
+
+      <div className="w-full">
+        <ReviewsSlider />
+      </div>
+
+      <div className="container mx-auto px-4 md:px-8 lg:px-16 pb-8">
 
         {/* Benefits Section */}
         <div id="benefits" className="scroll-mt-28 border-t border-gray-100 pt-10 mb-16">
@@ -774,20 +781,20 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
           <div className="space-y-4 max-w-4xl mx-auto">
             {[
               {
-                question: "How will the Puja be performed?",
-                answer: "The Puja will be performed by experienced Pandits at the Jwala Ji Temple in Kangra, Himachal Pradesh. It includes a custom Havan and personal Sankalp where your name and gotra are chanted."
+                question: "When will I receive the Puja video and Darshan?",
+                answer: "Your faith and participation in the Puja are important to us. Once the Puja is completed, our team will carefully process the Puja recording and share your Puja video along with Darshan within 2 days. This allows you to see the sacred rituals performed on your behalf and feel connected to the divine blessings, even if you could not be physically present at the temple."
               },
               {
-                question: "Do I need to be physically present at the temple?",
-                answer: "No, physical presence is not required. The puja is performed on your behalf (Online Puja Seva). A custom Sankalp video recording and the complete puja video will be shared with you on WhatsApp."
+                question: "Will I get a refund if I am unable to attend the Puja?",
+                answer: "When you book a Puja, you are participating in a sacred spiritual ritual that is performed especially for you and your family. Once your booking is confirmed, arrangements are made for your participation and the required Puja rituals. Therefore, Puja bookings are non-refundable. We request you to kindly review your details and Puja selection before completing your booking. Our intention is to maintain complete transparency and ensure that every devotee's contribution is respectfully used toward the Puja and its arrangements."
               },
               {
-                question: "What details do I need to share for booking?",
-                answer: "During booking checkout, you will need to provide the names, gotras, and specific wishes of the family members participating in the puja."
+                question: "Can I book the Puja for my mother, father, or other family members?",
+                answer: "Yes, absolutely. You can book the Puja with the intention of seeking divine blessings for your loved ones. You can choose our Family Package to include your parents and family members in the Puja. You may also book the Couple Puja for yourself and your partner and receive the benefits associated with couple participation. Whether you are praying for your parents' well-being, your family's happiness, your partner's prosperity, or peace in your home, you can make the Puja booking with a heartfelt Sankalp for your loved ones."
               },
               {
-                question: "When and how will I get the Blessed Items?",
-                answer: "You will receive the complete video of your sankalp and puja on your registered WhatsApp number."
+                question: "Can I join the Puja live online?",
+                answer: "At present, live online participation is not available for this Puja. However, your participation does not end with the booking. The Puja is performed with your name and Sankalp, and you will receive the Puja video along with Darshan within 2 days after the Puja. This allows you to witness the sacred rituals and receive Darshan from wherever you are. If live online participation becomes available in the future, we will notify you through the contact details provided during your booking. Our promise: We believe that every Puja should be handled with faith, transparency, devotion, and respect. Your trust is precious to us, and we are committed to keeping you informed throughout your spiritual journey."
               }
             ].map((faq, index) => {
               const isOpen = openFaqIndex === index;
@@ -1122,6 +1129,18 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Mobile Sticky Book Now Button */}
+      {puja.isActive !== false && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 z-40 shadow-[0_-8px_16px_rgba(0,0,0,0.08)] pb-safe">
+          <button 
+            onClick={() => setIsPackagePopupOpen(true)}
+            className="w-full bg-[#008060] text-white text-[15px] font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition-transform"
+          >
+            Book Puja Now
+          </button>
+        </div>
+      )}
     </div>
   );
 }
