@@ -46,6 +46,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     const image = formData.get("image") as File | null;
     const templeImage = formData.get("templeImage") as File | null;
+    const templeImage2 = formData.get("templeImage2") as File | null;
+    const templeImage3 = formData.get("templeImage3") as File | null;
     const sliderImage1 = formData.get("sliderImage1") as File | null;
     const sliderImage2 = formData.get("sliderImage2") as File | null;
     
@@ -57,6 +59,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     let imageSrc = existingPuja.imageSrc; // keep existing by default
     let templeImageSrc = existingPuja.templeImageSrc || "";
+    let templeImage2Src = existingPuja.templeImage2Src || "";
+    let templeImage3Src = existingPuja.templeImage3Src || "";
     let sliderImage1Src = existingPuja.sliderImage1Src || "";
     let sliderImage2Src = existingPuja.sliderImage2Src || "";
 
@@ -73,6 +77,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     uploadTasks.push(processUpload(image, (url) => { imageSrc = url; }));
     uploadTasks.push(processUpload(templeImage, (url) => { templeImageSrc = url; }));
+    uploadTasks.push(processUpload(templeImage2, (url) => { templeImage2Src = url; }));
+    uploadTasks.push(processUpload(templeImage3, (url) => { templeImage3Src = url; }));
     uploadTasks.push(processUpload(sliderImage1, (url) => { sliderImage1Src = url; }));
     uploadTasks.push(processUpload(sliderImage2, (url) => { sliderImage2Src = url; }));
 
@@ -172,6 +178,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         whyThisPuja,
         aboutTemple,
         templeImageSrc,
+        templeImage2Src,
+        templeImage3Src,
         benefits,
         inclusions,
         packages,

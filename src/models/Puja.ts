@@ -17,6 +17,8 @@ export interface IPuja extends Document {
   whyThisPuja?: string;
   aboutTemple?: string;
   templeImageSrc?: string;
+  templeImage2Src?: string;
+  templeImage3Src?: string;
   benefits?: string[];
   inclusions?: string[];
   packages?: any;
@@ -40,6 +42,8 @@ const PujaSchema: Schema = new Schema({
   whyThisPuja: { type: String, default: '' },
   aboutTemple: { type: String, default: '' },
   templeImageSrc: { type: String, default: '' },
+  templeImage2Src: { type: String, default: '' },
+  templeImage3Src: { type: String, default: '' },
   benefits: { type: [String], default: [] },
   inclusions: { type: [String], default: [] },
   packages: { type: Schema.Types.Mixed, default: null },

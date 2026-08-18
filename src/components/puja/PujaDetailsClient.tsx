@@ -40,6 +40,8 @@ interface PujaDetailsClientProps {
     whyThisPuja?: string;
     aboutTemple?: string;
     templeImageSrc?: string;
+    templeImage2Src?: string;
+    templeImage3Src?: string;
     benefits?: string[];
     inclusions?: string[];
     packages?: {
@@ -528,18 +530,36 @@ export default function PujaDetailsClient({ puja }: PujaDetailsClientProps) {
             </h2>
             <div className="bg-[#FFFDF6] border border-[#F3912E]/5 rounded-3xl p-6 md:p-8 shadow-sm">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                {puja.templeImageSrc && (
-                  <div className="md:col-span-5 relative w-full h-[250px] md:h-[300px] rounded-2xl overflow-hidden shadow-sm">
-                    <SafeImage 
-                      src={puja.templeImageSrc} 
-                      alt="Temple" 
-                      fill
-                      sizes="(max-width: 768px) 100vw, 42vw"
-                      className="object-cover"
-                    />
+                {(puja.templeImageSrc || puja.templeImage2Src || puja.templeImage3Src) && (
+                  <div className="md:col-span-5 flex flex-col gap-4">
+                    {puja.templeImageSrc && (
+                      <div className="relative w-full h-[250px] md:h-[300px] rounded-2xl overflow-hidden shadow-sm">
+                        <SafeImage 
+                          src={puja.templeImageSrc} 
+                          alt="Temple" 
+                          fill
+                          sizes="(max-width: 768px) 100vw, 42vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    {(puja.templeImage2Src || puja.templeImage3Src) && (
+                      <div className="grid grid-cols-2 gap-4">
+                        {puja.templeImage2Src && (
+                          <div className="relative w-full h-[120px] rounded-2xl overflow-hidden shadow-sm">
+                            <SafeImage src={puja.templeImage2Src} alt="Temple 2" fill className="object-cover" />
+                          </div>
+                        )}
+                        {puja.templeImage3Src && (
+                          <div className="relative w-full h-[120px] rounded-2xl overflow-hidden shadow-sm">
+                            <SafeImage src={puja.templeImage3Src} alt="Temple 3" fill className="object-cover" />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
-                <div className={puja.templeImageSrc ? "md:col-span-7" : "md:col-span-12"}>
+                <div className={(puja.templeImageSrc || puja.templeImage2Src || puja.templeImage3Src) ? "md:col-span-7" : "md:col-span-12"}>
                   <p className="text-gray-600 text-[15px] leading-relaxed whitespace-pre-line">
                     {puja.aboutTemple}
                   </p>

@@ -39,6 +39,12 @@ export default function AddPujaPage() {
   const [templeImageFile, setTempleImageFile] = useState<File | null>(null);
   const [templeImagePreview, setTempleImagePreview] = useState<string | null>(null);
 
+  const [templeImage2File, setTempleImage2File] = useState<File | null>(null);
+  const [templeImage2Preview, setTempleImage2Preview] = useState<string | null>(null);
+
+  const [templeImage3File, setTempleImage3File] = useState<File | null>(null);
+  const [templeImage3Preview, setTempleImage3Preview] = useState<string | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const value = e.target.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
     setFormData({ ...formData, [e.target.name]: value });
@@ -76,6 +82,22 @@ export default function AddPujaPage() {
     }
   };
 
+  const handleTemple2FileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setTempleImage2File(file);
+      setTempleImage2Preview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleTemple3FileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setTempleImage3File(file);
+      setTempleImage3Preview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!imageFile) {
@@ -99,6 +121,12 @@ export default function AddPujaPage() {
       }
       if (templeImageFile) {
         form.append("templeImage", templeImageFile);
+      }
+      if (templeImage2File) {
+        form.append("templeImage2", templeImage2File);
+      }
+      if (templeImage3File) {
+        form.append("templeImage3", templeImage3File);
       }
 
       const res = await fetch("/api/pujas", {
@@ -325,18 +353,52 @@ export default function AddPujaPage() {
               className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-y mb-4"
             ></textarea>
 
-            <label className="block text-sm font-medium text-gray-700 mb-1">Temple Image (Left Side Image)</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleTempleFileChange}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            />
-            {templeImagePreview && (
-              <div className="mt-4">
-                <img src={templeImagePreview} alt="Temple Preview" className="w-48 rounded-lg border border-gray-200" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Temple Image 1 (Left Side)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleTempleFileChange}
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                {templeImagePreview && (
+                  <div className="mt-4">
+                    <img src={templeImagePreview} alt="Temple Preview 1" className="w-full rounded-lg border border-gray-200" />
+                  </div>
+                )}
               </div>
-            )}
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Temple Image 2 (Optional)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleTemple2FileChange}
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                {templeImage2Preview && (
+                  <div className="mt-4">
+                    <img src={templeImage2Preview} alt="Temple Preview 2" className="w-full rounded-lg border border-gray-200" />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Temple Image 3 (Optional)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleTemple3FileChange}
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                {templeImage3Preview && (
+                  <div className="mt-4">
+                    <img src={templeImage3Preview} alt="Temple Preview 3" className="w-full rounded-lg border border-gray-200" />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="md:col-span-1">
